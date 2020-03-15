@@ -5,7 +5,7 @@ pages:
   - npm install
   - npm run metadata:generate
   - npm run build
-  - mv ./bundle ../public
+  - mv ./bundle ./public
 
   artifacts:
     paths:
