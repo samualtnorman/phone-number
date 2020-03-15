@@ -60,7 +60,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/catamphetamine/libphonenumber-js.git"
+    "url": "git+https://gitlab.com/catamphetamine/libphonenumber-js.git"
   },
   "keywords": [
     "javascript",
@@ -77,9 +77,9 @@
   "author": "catamphetamine <purecatamphetamine@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/catamphetamine/libphonenumber-js/issues"
+    "url": "https://gitlab.com/catamphetamine/libphonenumber-js/issues"
   },
-  "homepage": "https://github.com/catamphetamine/libphonenumber-js#readme",
+  "homepage": "https://gitlab.com/catamphetamine/libphonenumber-js#readme",
   "bin": {
     "libphonenumber-generate-metadata": "./bin/update-metadata.js"
   }
