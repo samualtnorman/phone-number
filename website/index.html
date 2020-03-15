@@ -2,12 +2,23 @@
 	<head>
 		<title>libphonenumber-js</title>
 
-		<script src="https://unpkg.com/react@15.3.1/dist/react.js"></script>
-		<script src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.js"></script>
+		<!-- React 16 -->
+		<script crossorigin src="https://unpkg.com/react@16.10.2/umd/react.production.min.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@16.10.2/umd/react-dom.production.min.js"></script>
+
 		<script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
 
-		<script src="./input-format.min.js"></script>
-		<script src="./libphonenumber-max.js"></script>
+		<!-- PropTypes -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.7.2/prop-types.min.js"></script>
+
+		<script src="./lib/input-format-react.min.js"></script>
+
+		<script>
+			window.InputFormatReactInput = window.InputFormat
+		</script>
+
+		<script src="./lib/input-format.min.js"></script>
+		<script src="./lib/libphonenumber-max.js"></script>
 
 		<meta charset="utf-8"/>
 	</head>
@@ -162,7 +173,9 @@
 
 		<p>A simpler and smaller rewrite of Google Android's <a target="_blank" href="https://github.com/googlei18n/libphonenumber">libphonenumber</a> library.</p>
 
+		<!--
 		<p>This is a demo for the new API. <a href="https://catamphetamine.gitlab.io/libphonenumber-js/legacy.html">See legacy API demo</a>.</p>
+		-->
 
 		<p>
 		Note: This demo uses "max" metadata set. <a href="https://gitlab.com/catamphetamine/libphonenumber-js#min-vs-max-vs-mobile-vs-core">See readme on "min" vs "max" vs "mobile"</a>.
@@ -198,29 +211,25 @@
 				)
 			}
 
-			var Content = React.createClass
-			({
-				getInitialState: function()
-				{
-					return {
-						parseCountry : 'US',
-						parseValue   : '213-373-4253',
-						asYouTypeCountry : 'US',
-						asYouTypeValue   : '', // '+12133734253',
-						findNumbersCountry : 'US',
-						findNumbersText : 'For more details call +7 (800) 555-35-35 internationally or reach the local US branch at (213) 373-4253 ext. 1234 for paid customer support.'
+			class Content extends React.Component {
+				constructor() {
+					super()
+					this.state = {
+						parseCountry: 'US',
+						parseValue: '213-373-4253',
+						asYouTypeCountry: 'US',
+						asYouTypeValue: '', // '+12133734253',
+						findNumbersCountry: 'US',
+						findNumbersText: 'For more details call +7 (800) 555-35-35 internationally or reach the local US branch at (213) 373-4253 ext. 1234 for paid customer support.'
 					}
-				},
+				}
 
-				render: function()
+				render()
 				{
-					// const libphonenumber = window.libphonenumber
-					const inputFormat = window['input-format']
-
-					const ReactInput        = inputFormat.ReactInput
-					const templateParser    = inputFormat.templateParser
-					const templateFormatter = inputFormat.templateFormatter
-					const parseDigit        = inputFormat.parseDigit
+					const ReactInput        = InputFormatReactInput
+					const templateParser    = InputFormat.templateParser
+					const templateFormatter = InputFormat.templateFormatter
+					const parseDigit        = InputFormat.parseDigit
 
 					let asYouType
 					let parsedNumber
@@ -279,44 +288,31 @@
 								placeholder="Enter a phone number"
 								value={this.state.asYouTypeValue}
 								onChange={value => this.setState({ asYouTypeValue: value })}
-								parse={(character, value) =>
-								{
+								parse={(character, value) => {
 									// Leading plus is allowed
-									if (character === '+')
-									{
-										if (!value)
-										{
+									if (character === '+') {
+										if (!value) {
 											return character
 										}
 									}
-
 									// Digits are allowed
 									return parseDigit(character)
 								}}
-								format={(value) =>
-								{
+								format={(value) => {
 									let text
 									let template
-
-									try
-									{
+									try {
 										const asYouType = new libphonenumber.AsYouType(this.state.asYouTypeCountry)
 										text = asYouType.input(value)
 										template = asYouType.template
-									}
-									catch (error)
-									{
-										if (error.message.indexOf('Unknown country') === 0)
-										{
+									} catch (error) {
+										if (error.message.indexOf('Unknown country') === 0) {
 											text = value
 											template = value.replace(/./g, 'x')
-										}
-										else
-										{
+										} else {
 											throw error
 										}
 									}
-
 									return { text, template }
 								}}/>
 
@@ -387,34 +383,34 @@
 						</div>
 					)
 				}
-			})
+			}
 
 			// https://stackoverflow.com/questions/22677931/react-js-onchange-event-for-contenteditable/27255103#27255103
-			var ContentEditable = React.createClass({
-				render: function(){
+			class ContentEditable extends React.Component {
+				render() {
 					return <div id="contenteditable"
 						onInput={this.emitChange}
 						onBlur={this.emitChange}
 						className={this.props.className}
 						contentEditable={!this.props.readOnly}
 						dangerouslySetInnerHTML={{__html: this.props.html}}></div>;
-				},
+				}
 
-				getDOMNode: function() {
+				getDOMNode() {
 					return ReactDOM.findDOMNode(this);
-				},
+				}
 
-				shouldComponentUpdate: function(nextProps) {
+				shouldComponentUpdate(nextProps) {
 					return nextProps.html !== this.getDOMNode().innerHTML;
-				},
+				}
 
-				componentDidUpdate: function() {
+				componentDidUpdate() {
 					if ( this.props.html !== this.getDOMNode().innerHTML ) {
 						this.getDOMNode().innerHTML = this.props.html;
 					}
-				},
+				}
 
-				emitChange: function() {
+				emitChange() {
 					var html = this.getDOMNode().innerHTML;
 					if (this.props.onChange && html !== this.lastHtml) {
 						this.props.onChange({
@@ -425,7 +421,7 @@
 					}
 					this.lastHtml = html;
 				}
-			})
+			}
 
 			ReactDOM.render
 			(
