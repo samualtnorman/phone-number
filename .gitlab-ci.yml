@@ -6,6 +6,7 @@ pages:
   - npm run metadata:generate
   - npm run build
   - mv ./bundle ./public
+  - cp ./website/* ./public/
 
   artifacts:
     paths:
