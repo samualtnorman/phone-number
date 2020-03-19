@@ -6,7 +6,7 @@
   "module": "index.es6.js",
   "sideEffects": false,
   "dependencies": {
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.5",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
