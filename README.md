@@ -447,7 +447,10 @@ Available `options`:
 
 * `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
- * `input(text)` — Takes any text, parses it and appends the digits to the input. Returns the formatted phone number.
+The formatter instance has the following methods:
+
+ * `input(text: string)` — Appends text to the input. Returns the formatted phone number.
+
  * `reset()` — Resets the input.
 
 ```js
@@ -490,6 +493,16 @@ asYouType.getNumber().country === 'US'
 asYouType.getNumber().number === '+12133734253'
 asYouType.getTemplate() === 'xx xxx xxx xxxx'
 ```
+
+ * `isInternational(): boolean` — Returns `true` if the phone number is being input in international format. In other words, returns `true` if and only if the parsed phone number starts with a `"+"`.
+
+ * `getCountryCallingCode(): string` — Returns the ["country calling code"](#country-calling-code) part of the phone number. Returns `undefined` if the number is not being input in international format. Returns "country calling code" for ["non-geographic"](#non-geographic) phone numbering plans too.
+
+ * `getCountry(): string` — Returns a two-letter [country code](#country-code) of the phone number. Returns `undefined` for ["non-geographic"](#non-geographic) phone numbering plans. Returns `undefined` if no phone number has been input yet.
+
+ * `isPossible(): boolean` — Returns `true` if the phone number is "possible". Is just a shortcut for [`PhoneNumber.isPossible()`](#ispossible-boolean).
+
+ * `isValid(): boolean` — Returns `true` if the phone number is "valid". Is just a shortcut for [`PhoneNumber.isValid()`](#isvalid-boolean).
 
 <details>
 <summary>Legacy API (before version <code>1.6.0</code>)</summary>
