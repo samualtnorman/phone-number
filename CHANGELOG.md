@@ -1,3 +1,7 @@
+<!-- (breaking change) Metadata is often updated, so it has been extracted into its own package: `libphonenumber-metadata`. -->
+
+<!-- `metadata.json` is now included in the package. -->
+
 <!-- (breaking change) `parseNumber()` is now `extended: true` by default (and the `extended` flag is no longer supported) meaning that by default it will parse all even remotely hypothetical phone numbers (this was decided to be the primary use case for this function, and it's how Google's libphonenumber does it). Pass `strict: true` flag for the old "only parse valid numbers" behaviour. -->
 
 <!-- (breaking change) `formatNumber()` no longer supports `formatNumber(numberString, countryString, format)` notation, use `formatNumber({ phone, country }, format)` notation instead. -->
