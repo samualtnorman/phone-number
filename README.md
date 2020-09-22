@@ -88,6 +88,7 @@ if (phoneNumber) {
   phoneNumber.country === 'RU'
   phoneNumber.number === '+78005553535'
   phoneNumber.isValid() === true
+  // Note: `.getType()` requires `/max` metadata.
   phoneNumber.getType() === 'TOLL_FREE'
 }
 ```
