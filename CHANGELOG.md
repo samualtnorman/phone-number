@@ -1,3 +1,5 @@
+<!-- (breaking change) Moved `findPhoneNumbersInText()` to its own subpackage `libphonenumber-js/search`. -->
+
 <!-- (breaking change) Metadata is often updated, so it has been extracted into its own package: `libphonenumber-metadata`. -->
 
 <!-- `metadata.json` is now included in the package. -->
@@ -56,6 +58,11 @@ And edit the README:
 -->
 
 <!-- (breaking change) Changed `countries` and `country_calling_codes` properties in metadata: now they're not properties but rather elements of an array (`countries` is an array now rather than an object; `countries` is `metadata[0]` and `country_calling_codes` is `metadata[1]`). If you were using a custom-generated metadata then it has to be re-generated for the new version. -->
+
+1.8.0 / 22.09.2020
+==================
+
+* Promoted `parsePhoneNumberFromString()` named export to a default export due to the name being too verbose.
 
 1.7.50 / 05.04.2020
 ===================

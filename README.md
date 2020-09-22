@@ -77,9 +77,9 @@ _(new API)_
 -->
 
 ```js
-import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import parsePhoneNumber from 'libphonenumber-js/min'
 
-const phoneNumber = parsePhoneNumberFromString('Phone: 8 (800) 555 35 35.', 'RU')
+const phoneNumber = parsePhoneNumber('Phone: 8 (800) 555 35 35.', 'RU')
 if (phoneNumber) {
   phoneNumber.country === 'RU'
   phoneNumber.number === '+78005553535'
@@ -108,9 +108,9 @@ _(new API)_
 -->
 
 ```js
-import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import parsePhoneNumber from 'libphonenumber-js/min'
 
-const phoneNumber = parsePhoneNumberFromString('+12133734253')
+const phoneNumber = parsePhoneNumber('+12133734253')
 
 phoneNumber.formatInternational() === '+1 213 373 4253'
 phoneNumber.formatNational() === '(213) 373-4253'
@@ -142,7 +142,7 @@ formatNumber({ country: 'US', phone: '2133734253' }, 'NATIONAL')
 ### "As You Type" formatter
 
 ```js
-import { AsYouType } from 'libphonenumber-js'
+import { AsYouType } from 'libphonenumber-js/min'
 
 new AsYouType().input('+12133734')
 // Outputs: '+1 213 373 4'
@@ -158,7 +158,7 @@ _(new API)_
 -->
 
 ```js
-import { findPhoneNumbersInText } from 'libphonenumber-js'
+import { findPhoneNumbersInText } from 'libphonenumber-js/min'
 
 findPhoneNumbersInText(`
   For tech support call +7 (800) 555-35-35 internationally
@@ -224,8 +224,11 @@ Such phone numbering plans are called "non-geographic", and their phone numbers 
 
 Parses a phone number from `string`.
 
+Can be imported both as a "default" export and as a "named" export.
+
 ```js
-import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import parsePhoneNumberFromString from 'libphonenumber-js/min'
+// Or: import { parsePhoneNumberFromString } from 'libphonenumber-js/min'
 
 const phoneNumber = parsePhoneNumberFromString('Call: (213) 373-42-53 ext. 1234.', 'US')
 if (phoneNumber) {
@@ -244,7 +247,7 @@ Available `options`:
 If a developer wants to know the exact reason why the phone number couldn't be parsed then they can use `parsePhoneNumber()` function which throws the exact error:
 
 ```js
-import { parsePhoneNumber, ParseError } from 'libphonenumber-js'
+import { parsePhoneNumber, ParseError } from 'libphonenumber-js/min'
 
 try {
   const phoneNumber = parsePhoneNumber('Call: (213) 373-42-53 ext. 1234.', 'US')
@@ -314,9 +317,9 @@ Available `options`:
 Examples:
 
 ```js
-import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import parsePhoneNumber from 'libphonenumber-js/min'
 
-const phoneNumber = parsePhoneNumberFromString('+12133734253')
+const phoneNumber = parsePhoneNumber('+12133734253')
 
 phoneNumber.format("NATIONAL") === '(213) 373-4253'
 phoneNumber.format("INTERNATIONAL") === '+1 213 373 4253'
@@ -343,9 +346,9 @@ By default the library uses "minimal" metadata which is only 75 kilobytes in siz
 
 ####
 ```js
-import { parsePhoneNumberFromString as parseMin } from 'libphonenumber-js'
-import { parsePhoneNumberFromString as parseMax } from 'libphonenumber-js/max'
-import { parsePhoneNumberFromString as parseMobile } from 'libphonenumber-js/mobile'
+import parseMin from 'libphonenumber-js/min'
+import parseMax from 'libphonenumber-js/max'
+import parseMobile from 'libphonenumber-js/mobile'
 
 // Mobile numbers in Singapore starting from `8`
 // can only have the second digit in the range of `0..8`.
@@ -407,9 +410,9 @@ By default the library uses "minimal" metadata which is only 75 kilobytes in siz
 
 ####
 ```js
-import { parsePhoneNumberFromString as parseMin } from 'libphonenumber-js'
-import { parsePhoneNumberFromString as parseMax } from 'libphonenumber-js/max'
-import { parsePhoneNumberFromString as parseMobile } from 'libphonenumber-js/mobile'
+import parseMin from 'libphonenumber-js/min'
+import parseMax from 'libphonenumber-js/max'
+import parseMobile from 'libphonenumber-js/mobile'
 
 // Singapore valid mobile number.
 
@@ -565,7 +568,7 @@ Available `options`:
 * `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
 ```js
-import { findPhoneNumbersInText } from 'libphonenumber-js'
+import { findPhoneNumbersInText } from 'libphonenumber-js/min'
 
 findPhoneNumbersInText(`
   For tech support call +7 (800) 555-35-35 internationally
@@ -643,7 +646,7 @@ By default it processes the whole text and then outputs the phone numbers found.
 ES6 iterator:
 
 ```js
-import { searchPhoneNumbersInText } from 'libphonenumber-js'
+import { searchPhoneNumbersInText } from 'libphonenumber-js/min'
 
 const text = `
   For tech support call +7 (800) 555-35-35 internationally
@@ -662,7 +665,7 @@ async function() {
 Java-style iterator (for those still not using ES6):
 
 ```js
-import { PhoneNumberMatcher } from 'libphonenumber-js'
+import { PhoneNumberMatcher } from 'libphonenumber-js/min'
 
 const matcher = new PhoneNumberMatcher(`
   For tech support call +7 (800) 555-35-35 internationally
@@ -697,7 +700,7 @@ Returns an example phone number for a [country](#country-code). Returns an insta
 
 ```js
 import examples from 'libphonenumber-js/examples.mobile.json'
-import { getExampleNumber } from 'libphonenumber-js'
+import { getExampleNumber } from 'libphonenumber-js/min'
 
 const phoneNumber = getExampleNumber('RU', examples)
 
