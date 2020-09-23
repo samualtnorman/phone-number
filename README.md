@@ -52,26 +52,6 @@ $ yarn add libphonenumber-js
 
 If you're not using a bundler then use a [standalone version from a CDN](https://gitlab.com/catamphetamine/libphonenumber-js/#cdn).
 
-## "min" vs "max" vs "mobile" vs "core"
-
-This library requires choosing a "metadata" set first, "metadata" being a list of phone number parsing and formatting rules for all countries. The complete list of those rules is huge, so this library provides a way to optimize bundle size by choosing between `max`, `min`, `mobile` and custom metadata:
-
-* `max` — The complete metadata set, is about `140 kilobytes` in size (`libphonenumber-js/metadata.full.json`). Choose this when you need the most strict version of `isValid()`, or if you need to detect phone number type ("fixed line", "mobile", etc).
-
-* `min` — (default) The smallest metadata set, is about `75 kilobytes` in size (`libphonenumber-js/metadata.min.json`). Choose this by default: when you don't need to detect phone number type ("fixed line", "mobile", etc), or when a basic version of `isValid()` is enough. The `min` metadata set doesn't contain the regular expressions for phone number digits validation (via [`.isValid()`](#isvalid)) and detecting phone number type (via [`.getType()`](#gettype)) for most countries. In this case, `.isValid()` still performs some basic phone number validation (for example, checks phone number length), but it doesn't validate phone number digits themselves the way `max` metadata validation does.
-
-* `mobile` — The complete metadata set for dealing with mobile numbers _only_, is about `105 kilobytes` in size (`libphonenumber-js/metadata.mobile.json`). Choose this when you need `max` metadata and when you _only_ work with mobile numbers.
-
-To use a particular metadata set, simply import functions from a relevant sub-package:
-
-* `libphonenumber-js/max`
-* `libphonenumber-js/min`
-* `libphonenumber-js/mobile`
-
-Importing functions directly from `libphonenumber-js` effectively results in using the `min` metadata.
-
-Sometimes (rarely) not all countries are needed, and in those cases developers may want to [generate](#customizing-metadata) their own "custom" metadata set. For those cases, there's `libphonenumber-js/core` sub-package which doesn't come pre-packaged with any default metadata set and instead accepts metadata as the last argument of each exported function.
-
 ## Use
 
 ### Parse phone number
@@ -81,14 +61,14 @@ _(new API)_
 -->
 
 ```js
-import parsePhoneNumber from 'libphonenumber-js/min'
+import parsePhoneNumber from 'libphonenumber-js'
 
 const phoneNumber = parsePhoneNumber('Phone: 8 (800) 555 35 35.', 'RU')
 if (phoneNumber) {
   phoneNumber.country === 'RU'
   phoneNumber.number === '+78005553535'
   phoneNumber.isValid() === true
-  // Note: `.getType()` requires `/max` metadata.
+  // Note: `.getType()` requires `/max` metadata: see below for an explanation.
   phoneNumber.getType() === 'TOLL_FREE'
 }
 ```
@@ -113,7 +93,7 @@ _(new API)_
 -->
 
 ```js
-import parsePhoneNumber from 'libphonenumber-js/min'
+import parsePhoneNumber from 'libphonenumber-js'
 
 const phoneNumber = parsePhoneNumber('+12133734253')
 
@@ -147,7 +127,7 @@ formatNumber({ country: 'US', phone: '2133734253' }, 'NATIONAL')
 ### "As You Type" formatter
 
 ```js
-import { AsYouType } from 'libphonenumber-js/min'
+import { AsYouType } from 'libphonenumber-js'
 
 new AsYouType().input('+12133734')
 // Outputs: '+1 213 373 4'
@@ -163,7 +143,7 @@ _(new API)_
 -->
 
 ```js
-import { findPhoneNumbersInText } from 'libphonenumber-js/min'
+import { findPhoneNumbersInText } from 'libphonenumber-js'
 
 findPhoneNumbersInText(`
   For tech support call +7 (800) 555-35-35 internationally
@@ -193,6 +173,26 @@ findPhoneNumbersInText(`
 //   endsAt   : 110
 // }]
 ```
+
+## "min" vs "max" vs "mobile" vs "core"
+
+This library provides different "metadata" sets, "metadata" being a list of phone number parsing and formatting rules for all countries. The complete list of those rules is huge, so this library provides a way to optimize bundle size by choosing between `max`, `min`, `mobile` and "custom" metadata:
+
+* `max` — The complete metadata set, is about `140 kilobytes` in size (`libphonenumber-js/metadata.full.json`). Choose this when you need the most strict version of `isValid()`, or if you need to detect phone number type ("fixed line", "mobile", etc).
+
+* `min` — (default) The smallest metadata set, is about `75 kilobytes` in size (`libphonenumber-js/metadata.min.json`). Choose this by default: when you don't need to detect phone number type ("fixed line", "mobile", etc), or when a basic version of `isValid()` is enough. The `min` metadata set doesn't contain the regular expressions for phone number digits validation (via [`.isValid()`](#isvalid)) and detecting phone number type (via [`.getType()`](#gettype)) for most countries. In this case, `.isValid()` still performs some basic phone number validation (for example, checks phone number length), but it doesn't validate phone number digits themselves the way `max` metadata validation does.
+
+* `mobile` — The complete metadata set for dealing with mobile numbers _only_, is about `105 kilobytes` in size (`libphonenumber-js/metadata.mobile.json`). Choose this when you need `max` metadata and when you _only_ work with mobile numbers.
+
+To use a particular metadata set, simply import functions from a relevant sub-package:
+
+* `libphonenumber-js/max`
+* `libphonenumber-js/min`
+* `libphonenumber-js/mobile`
+
+Importing functions directly from `libphonenumber-js` effectively results in using the `min` metadata.
+
+Sometimes (rarely) not all countries are needed, and in those cases developers may want to [generate](#customizing-metadata) their own "custom" metadata set. For those cases, there's `libphonenumber-js/core` sub-package which doesn't come pre-packaged with any default metadata set and instead accepts metadata as the last argument of each exported function.
 
 ## Definitions
 
@@ -232,8 +232,8 @@ Parses a phone number from `string`.
 Can be imported both as a "default" export and as a "named" export.
 
 ```js
-import parsePhoneNumberFromString from 'libphonenumber-js/min'
-// Or: import { parsePhoneNumberFromString } from 'libphonenumber-js/min'
+import parsePhoneNumberFromString from 'libphonenumber-js'
+// Or: import { parsePhoneNumberFromString } from 'libphonenumber-js'
 
 const phoneNumber = parsePhoneNumberFromString('Call: (213) 373-42-53 ext. 1234.', 'US')
 if (phoneNumber) {
@@ -252,7 +252,7 @@ Available `options`:
 If a developer wants to know the exact reason why the phone number couldn't be parsed then they can use `parsePhoneNumber()` function which throws the exact error:
 
 ```js
-import { parsePhoneNumber, ParseError } from 'libphonenumber-js/min'
+import { parsePhoneNumber, ParseError } from 'libphonenumber-js'
 
 try {
   const phoneNumber = parsePhoneNumber('Call: (213) 373-42-53 ext. 1234.', 'US')
@@ -322,7 +322,7 @@ Available `options`:
 Examples:
 
 ```js
-import parsePhoneNumber from 'libphonenumber-js/min'
+import parsePhoneNumber from 'libphonenumber-js'
 
 const phoneNumber = parsePhoneNumber('+12133734253')
 
@@ -573,7 +573,7 @@ Available `options`:
 * `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
 ```js
-import { findPhoneNumbersInText } from 'libphonenumber-js/min'
+import { findPhoneNumbersInText } from 'libphonenumber-js'
 
 findPhoneNumbersInText(`
   For tech support call +7 (800) 555-35-35 internationally
@@ -651,7 +651,7 @@ By default it processes the whole text and then outputs the phone numbers found.
 ES6 iterator:
 
 ```js
-import { searchPhoneNumbersInText } from 'libphonenumber-js/min'
+import { searchPhoneNumbersInText } from 'libphonenumber-js'
 
 const text = `
   For tech support call +7 (800) 555-35-35 internationally
@@ -670,7 +670,7 @@ async function() {
 Java-style iterator (for those still not using ES6):
 
 ```js
-import { PhoneNumberMatcher } from 'libphonenumber-js/min'
+import { PhoneNumberMatcher } from 'libphonenumber-js'
 
 const matcher = new PhoneNumberMatcher(`
   For tech support call +7 (800) 555-35-35 internationally
@@ -705,7 +705,7 @@ Returns an example phone number for a [country](#country-code). Returns an insta
 
 ```js
 import examples from 'libphonenumber-js/examples.mobile.json'
-import { getExampleNumber } from 'libphonenumber-js/min'
+import { getExampleNumber } from 'libphonenumber-js'
 
 const phoneNumber = getExampleNumber('RU', examples)
 
