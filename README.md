@@ -249,13 +249,13 @@ Available `options`:
 
 * `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
-If a developer wants to know the exact reason why the phone number couldn't be parsed then they can use `parsePhoneNumber()` function which throws the exact error:
+If a developer wants to know the exact reason why the phone number couldn't be parsed then they can use `parsePhoneNumberWithError()` function which throws the exact error:
 
 ```js
-import { parsePhoneNumber, ParseError } from 'libphonenumber-js'
+import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js'
 
 try {
-  const phoneNumber = parsePhoneNumber('Call: (213) 373-42-53 ext. 1234.', 'US')
+  const phoneNumber = parsePhoneNumberWithError('Call: (213) 373-42-53 ext. 1234.', 'US')
 } catch (error) {
   if (error instanceof ParseError) {
     // Not a phone number, non-existent country, etc.
