@@ -53,7 +53,7 @@ export function parsePhoneNumberWithError() {
 }
 
 // `parsePhoneNumber()` named export has been renamed to `parsePhoneNumberWithError()`.
-export const parsePhoneNumber = parsePhoneNumberWithError
+export var parsePhoneNumber = parsePhoneNumberWithError
 
 // `parsePhoneNumberFromString()` named export is now considered legacy:
 // it has been promoted to a default export due to being too verbose.
