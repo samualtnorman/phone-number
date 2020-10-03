@@ -182,7 +182,7 @@ This library provides different "metadata" sets, "metadata" being a list of phon
 
 * `min` — (default) The smallest metadata set, is about `75 kilobytes` in size (`libphonenumber-js/metadata.min.json`). Choose this by default: when you don't need to detect phone number type ("fixed line", "mobile", etc), or when a basic version of `isValid()` is enough. The `min` metadata set doesn't contain the regular expressions for phone number digits validation (via [`.isValid()`](#isvalid)) and detecting phone number type (via [`.getType()`](#gettype)) for most countries. In this case, `.isValid()` still performs some basic phone number validation (for example, checks phone number length), but it doesn't validate phone number digits themselves the way `max` metadata validation does.
 
-* `mobile` — The complete metadata set for dealing with mobile numbers _only_, is about `95 kilobytes` in size (`libphonenumber-js/metadata.mobile.json`). Choose this when you need `max` metadata and when you _only_ work with mobile numbers.
+* `mobile` — The complete metadata set for dealing with mobile numbers _only_, is about `95 kilobytes` in size (`libphonenumber-js/metadata.mobile.json`). Choose this when you need `max` metadata and when you _only_ accept mobile numbers. Other phone number types will still be parseable, but they won't be recognized as being "valid" (`.isValid()` will return `false`).
 
 To use a particular metadata set, simply import functions from a relevant sub-package:
 
@@ -1166,11 +1166,7 @@ Alternatively, a developer may wish to update metadata urgently, without waiting
 
 ## Customizing metadata
 
-This library comes prepackaged with three flavors of [metadata](#metadata):
-
-* `metadata.full.json` — contains everything, including all regular expressions for precise phone number validation and getting phone number type, but is about `140 kilobytes` in size.
-* `metadata.min.json` — (default) the minimal one, doesn't contain regular expressions for precise phone number validation and getting phone number type for most countries, is about `75 kilobytes` in size.
-* `metadata.mobile.json` — is the "full" metadata which _only_ supports mobile numbers, is about `95 kilobytes` in size.
+This library comes prepackaged with [three types of metadata](#min-vs-max-vs-mobile-vs-core).
 
 Sometimes, if only a specific set of countries is needed in a project, and a developer really wants to reduce the resulting bundle size, say, by 50 kilobytes (even when including all regular expressions for validating phone number digits and detecting phone number type), then they can generate such custom metadata and pass it as the last argument to this library's "core" functions.
 
@@ -1196,7 +1192,7 @@ The arguments are:
 * The first argument is the output metadata file path.
 * `--countries` argument is a comma-separated list of the countries included (if `--countries` is omitted then all countries are included).
 * `--extended` argument may be passed to include all regular expressions for precise phone number validation and getting phone number type, which will enlarge the resulting metadata size approximately twice.
-* `--types ...` argument may be passed instead of `--extended` to generate metadata that _only_ supports the selected phone number types (a comma-separated list, e.g. `--types mobile,fixed_line`). [See the list of all possible phone number types](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/source/tools/generate.js#L6-L18).
+* `--types ...` argument may be passed instead of `--extended` to generate metadata that _only_ supports the selected phone number types (a comma-separated list, e.g. `--types mobile,fixed_line`). [See the list of all possible phone number types](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/source/tools/generate.js#L6-L18). Other phone number types will still be parseable, but they won't be recognized as being "valid" (`.isValid()` will return `false`), and also their "type" won't be detected (`.getType()` will return `undefined`).
 </details>
 
 ####
