@@ -1,4 +1,4 @@
-<!-- (breaking change) Moved `findPhoneNumbersInText()` to its own subpackage: `libphonenumber-js/search`. -->
+<!-- (breaking change) Moved `findPhoneNumbersInText()` to its own subpackage: `libphonenumber-js/find`. The default export is `searchPhoneNumbersInText()` that returns an ES6 "iterator". -->
 
 <!-- Renamed source files: `parsePhoneNumber.js` -> `parsePhoneNumberWithError.js`, etc. -->
 
