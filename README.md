@@ -1143,13 +1143,31 @@ For those who aren't using bundlers for some reason there's a way to build a sta
 
 ## Metadata
 
-Metadata is generated from Google's original [`PhoneNumberMetadata.xml`](https://github.com/googlei18n/libphonenumber/blob/master/resources/PhoneNumberMetadata.xml) by transforming XML into JSON and removing unnecessary fields. See [metadata fields description](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md).
+Metadata is generated from Google's [`PhoneNumberMetadata.xml`](https://github.com/googlei18n/libphonenumber/blob/master/resources/PhoneNumberMetadata.xml) by transforming XML into JSON and removing unnecessary fields. See [metadata fields description](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md).
+
+### Programmatic access
+
+Metadata can be accessed programmatically by using the exported `Metadata` class.
+
+```js
+import { Metadata } from 'libphonenumber-js/core'
+import minMetadata from 'libphonenumber-js/metadata.min'
+
+const metadata = new Metadata(minMetadata)
+// Select a country.
+metadata.country('US')
+
+console.log(metadata.numberingPlan.leadingDigits())
+console.log(metadata.numberingPlan.possibleLengths())
+console.log(metadata.numberingPlan.IDDPrefix())
+console.log(metadata.numberingPlan.defaultIDDPrefix())
+```
+
+As one can see, the [`Metadata` class](https://gitlab.com/catamphetamine/libphonenumber-js/-/blob/master/source/metadata.js) is not documented much. Partially, that's because its usage is not encouraged, but it's still used, for example, in [`react-phone-number-input`](https://gitlab.com/catamphetamine/react-phone-number-input/-/blob/master/source/phoneInputHelpers.js) to get "leading digits" for a country, or to get maximum phone number length for a country.
 
 <!--
 Currently I have a script set up monitoring changes to `PhoneNumberMetadata.xml` in Google's repo and automatically releasing new versions of this library when metadata in Google's repo gets updated. So this library's metadata is supposed to be up-to-date. Still, in case the automatic metadata update script malfunctions some day, anyone can request metadata update via a Pull Request here on GitHub:
 -->
-
-The metadata update process is automated through an "autoupdate" script (see `./autoupdate.sh` or `./autoupdate.cmd`). The script detects changes to `PhoneNumberMetadata.xml` in Google `libphonenumber`'s repo and if there are changes then it pulls the latest metadata, processes it, commits the changes to GitHub, builds a new version of the library and releases it to NPM. So this library's metadata is supposed to be up-to-date. I could set up this script to run automatically but on my Windows machine `ssh-agent` doesn't work properly so I run the "autoupdate" script manually from time to time.
 
 <!--
 In case I forget to run the "autoupdate" script for a long time anyone can request metadata update via a Pull Request here on GitHub:
@@ -1164,7 +1182,7 @@ In case I forget to run the "autoupdate" script for a long time anyone can reque
 Alternatively, a developer may wish to update metadata urgently, without waiting for a pull request approval. In this case just perform the steps described in the [Customizing metadata](#customizing-metadata) section of this document.
 -->
 
-## Customizing metadata
+### Customizing metadata
 
 This library comes prepackaged with [three types of metadata](#min-vs-max-vs-mobile-vs-core).
 
@@ -1394,9 +1412,13 @@ launchctl list | grep 'libphonenumber-js'
 ```
 -->
 
-## Maintenance
+### Maintenance
 
-Google periodically releases new metadata with the changes described in the [release notes](https://github.com/googlei18n/libphonenumber/blob/master/release_notes.txt). Sometimes those are minor non-breaking updates, sometimes those are major-version breaking updates. The metadata should be periodically updated via `autoupdate.cmd` (Windows) and `autoupdate.sh` (Linux/macOS) scripts. Also Google sometimes (very rarely) updates their code: [`phonenumberutil.js`](https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/phonenumberutil.js) (`parseNumber()`, `formatNumber()`, `isValidNumber()`, `getNumberType()`), [`asyoutypeformatter.js`](https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/asyoutypeformatter.js) (`AsYouType`), [`PhoneNumberMatcher`](https://github.com/googlei18n/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberMatcher.java) (`findPhoneNumbersInText()`). The latest sync-up was performed on Jul 29th, 2020.
+Google periodically releases new metadata with the changes described in the [release notes](https://github.com/googlei18n/libphonenumber/blob/master/release_notes.txt). Sometimes those are minor non-breaking updates, sometimes those are major-version breaking updates.
+
+Metadata update process is automated through an "autoupdate" script: see `autoupdate.cmd` (Windows) or `autoupdate.sh` (Linux/macOS). The script detects changes to `PhoneNumberMetadata.xml` in Google `libphonenumber`'s repo and if there are changes then it pulls the latest metadata, processes it, commits the changes to GitHub, builds a new version of the library and releases it to NPM. So this library's metadata is supposed to be up-to-date. I could set up this script to run automatically but on my Windows machine `ssh-agent` doesn't work properly so I run the "autoupdate" script manually from time to time.
+
+Also Google sometimes (very rarely) updates their code: [`phonenumberutil.js`](https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/phonenumberutil.js) (`parseNumber()`, `formatNumber()`, `isValidNumber()`, `getNumberType()`), [`asyoutypeformatter.js`](https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/asyoutypeformatter.js) (`AsYouType`), [`PhoneNumberMatcher`](https://github.com/googlei18n/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberMatcher.java) (`findPhoneNumbersInText()`). The latest sync-up was performed on Jul 29th, 2020.
 
 ## Contributing
 
