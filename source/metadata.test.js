@@ -30,6 +30,11 @@ describe('metadata', () => {
 		new Metadata(metadata).getNumberingPlanMetadata('999')
 	})
 
+	it('should support deprecated methods', () => {
+		new Metadata(metadata).country('US').nationalPrefixForParsing().should.equal('1')
+		new Metadata(metadata).chooseCountryByCountryCallingCode('1').nationalPrefixForParsing().should.equal('1')
+	})
+
 	it('should validate metadata', () => {
 		let thrower = () => validateMetadata()
 		thrower.should.throw('`metadata` argument not passed')

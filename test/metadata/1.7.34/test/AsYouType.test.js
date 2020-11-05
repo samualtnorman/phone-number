@@ -261,14 +261,14 @@ describe('as you type', () => {
 		formatter.template.should.equal('xxx xx xxx xxxx')
 	})
 
-	it('should not forgive incorrect international phone numbers', () => {
+	it('should forgive incorrect international phone numbers', () => {
 		let formatter
 
 		formatter = new AsYouType()
-		// formatter.input('+1 1 877 215 5230').should.equal('+1 1 877 215 5230')
-		formatter.input('+1 1 877 215 5230').should.equal('+1 18772155230')
-		// formatter.getNationalNumber().should.equal('8772155230')
-		formatter.getNationalNumber().should.equal('18772155230')
+		formatter.input('+1 1 877 215 5230').should.equal('+1 1 877 215 5230')
+		// formatter.input('+1 1 877 215 5230').should.equal('+1 18772155230')
+		formatter.getNationalNumber().should.equal('8772155230')
+		// formatter.getNationalNumber().should.equal('18772155230')
 
 		formatter = new AsYouType()
 		formatter.input('+78800555353').should.equal('+7 880 055 53 53')
@@ -571,7 +571,7 @@ describe('as you type', () => {
 	it('should return PhoneNumber', () => {
 		const formatter = new AsYouType('RU')
 		formatter.input('+1111')
-		formatter.getNumber().number.should.equal('+1111')
+		formatter.getNumber().number.should.equal('+111')
 	})
 
 	it('shouldn\'t choose a format when there\'re too many digits for any of them', () => {

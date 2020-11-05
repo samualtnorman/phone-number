@@ -12,6 +12,8 @@ const V4 = '1.7.35'
 
 const DEFAULT_EXT_PREFIX = ' ext. '
 
+const CALLING_CODE_REG_EXP = /^\d+$/
+
 /**
  * See: https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md
  */
@@ -72,6 +74,11 @@ export default class Metadata {
 	}
 
 	selectNumberingPlan(countryCode, callingCode) {
+		// Supports just passing `callingCode` as the first argument.
+		if (countryCode && CALLING_CODE_REG_EXP.test(countryCode)) {
+			callingCode = countryCode
+			countryCode = null
+		}
 		if (countryCode && countryCode !== '001') {
 			if (!this.hasCountry(countryCode)) {
 				throw new Error(`Unknown country: ${countryCode}`)
@@ -200,7 +207,7 @@ export default class Metadata {
 
 	// Deprecated.
 	chooseCountryByCountryCallingCode(callingCode) {
-		this.selectNumberingPlan(null, callingCode)
+		return this.selectNumberingPlan(callingCode)
 	}
 
 	hasSelectedNumberingPlan() {

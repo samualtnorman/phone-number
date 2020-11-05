@@ -18,7 +18,8 @@ import isViablePhoneNumber from './isViablePhoneNumber'
 import { extractExtension } from './extension'
 import parseIncompletePhoneNumber from './parseIncompletePhoneNumber'
 import getCountryCallingCode from './getCountryCallingCode'
-import getNumberType, { checkNumberLengthForType } from './getNumberType_'
+import getNumberType from './getNumberType_'
+import checkNumberLength from './checkNumberLength'
 import { isPossibleNumber } from './isPossibleNumber_'
 import { stripIDDPrefix } from './IDD'
 import { parseRFC3966 } from './RFC3966'
@@ -164,6 +165,8 @@ export default function parse(text, options, metadata) {
 		return valid ? result(country, nationalNumber, ext) : {}
 	}
 
+	// isInternational: countryCallingCode !== undefined
+
 	return {
 		country,
 		countryCallingCode,
@@ -172,7 +175,7 @@ export default function parse(text, options, metadata) {
 		possible: valid ? true : (
 			options.extended === true &&
 			metadata.possibleLengths() &&
-			isPossibleNumber(nationalNumber, countryCallingCode !== undefined, metadata) ? true : false
+			isPossibleNumber(nationalNumber, metadata) ? true : false
 		),
 		phone: nationalNumber,
 		ext
@@ -223,59 +226,69 @@ export function extractFormattedPhoneNumber(text, throwOnError) {
  * it will return `{ number: "3402345678" }`, because `340` area code is prepended.
  * @param {string} number — National number digits.
  * @param {object} metadata — Metadata with country selected.
- * @return {object} `{ nationalNumber: string, carrierCode: string? }`.
+ * @return {object} `{ nationalNumber: string, nationalPrefix: string? carrierCode: string? }`. Not returning a `nationalPrefix` doesn't imply that the original phone number didn't contain it.
  */
-export function stripNationalPrefixAndCarrierCode(number, metadata) {
-	if (number && metadata.nationalPrefixForParsing()) {
+export function extractNationalNumberFromPossiblyIncompleteNumber(number, metadata) {
+	if (number && metadata.numberingPlan.nationalPrefixForParsing()) {
 		// See METADATA.md for the description of
 		// `national_prefix_for_parsing` and `national_prefix_transform_rule`.
 		// Attempt to parse the first digits as a national prefix.
-		const prefixPattern = new RegExp('^(?:' + metadata.nationalPrefixForParsing() + ')')
+		const prefixPattern = new RegExp('^(?:' + metadata.numberingPlan.nationalPrefixForParsing() + ')')
 		const prefixMatch = prefixPattern.exec(number)
 		if (prefixMatch) {
 			let nationalNumber
+			let nationalPrefix
 			let carrierCode
-			// If a "capturing group" didn't match
-			// then its element in `prefixMatch[]` array will be `undefined`.
+			// https://gitlab.com/catamphetamine/libphonenumber-js/-/blob/master/METADATA.md#national_prefix_for_parsing--national_prefix_transform_rule
+			// If a `national_prefix_for_parsing` has any "capturing groups"
+			// then it means that the national (significant) number is equal to
+			// those "capturing groups" transformed via `national_prefix_transform_rule`,
+			// and nothing could be said about the actual national prefix:
+			// what is it and was it even there.
+			// If a `national_prefix_for_parsing` doesn't have any "capturing groups",
+			// then everything it matches is a national prefix.
+			// To determine whether `national_prefix_for_parsing` matched any
+			// "capturing groups", the value of the result of calling `.exec()`
+			// is looked at, and if it has non-undefined values where there're
+			// "capturing groups" in the regular expression, then it means
+			// that "capturing groups" have been matched.
+			// It's not possible to tell whether there'll be any "capturing gropus"
+			// before the matching process, because a `national_prefix_for_parsing`
+			// could exhibit both behaviors.
 			const capturedGroupsCount = prefixMatch.length - 1
-			if (metadata.nationalPrefixTransformRule() &&
-				capturedGroupsCount > 0 && prefixMatch[capturedGroupsCount]) {
+			const hasCapturedGroups = capturedGroupsCount > 0 && prefixMatch[capturedGroupsCount]
+			if (metadata.nationalPrefixTransformRule() && hasCapturedGroups) {
 				nationalNumber = number.replace(
 					prefixPattern,
 					metadata.nationalPrefixTransformRule()
 				)
-				// Carrier code is the last captured group,
-				// but only when there's more than one captured group.
-				if (capturedGroupsCount > 1 && prefixMatch[capturedGroupsCount]) {
+				// If there's more than one captured group,
+				// then carrier code is the second one.
+				if (capturedGroupsCount > 1) {
 					carrierCode = prefixMatch[1]
 				}
 			}
-			// If it's a simple-enough case then just
-			// strip the national prefix from the number.
+			// If there're no "capturing groups",
+			// or if there're "capturing groups" but no
+			// `national_prefix_transform_rule`,
+			// then just strip the national prefix from the number,
+			// and possibly a carrier code.
+			// Seems like there could be more.
 			else {
 				// National prefix is the whole substring matched by
-				// the `national_prefix_for_parsing` regexp.
-				const nationalPrefix = prefixMatch[0]
+				// the `national_prefix_for_parsing` regular expression.
+				nationalPrefix = prefixMatch[0]
 				nationalNumber = number.slice(nationalPrefix.length)
-				// Carrier code is the last captured group.
+				// If there's at least one captured group,
+				// then carrier code is the first one.
 				if (capturedGroupsCount > 0) {
 					carrierCode = prefixMatch[1]
 				}
 			}
-			// We require that the national (significant) number remaining after
-			// stripping the national prefix and carrier code be long enough
-			// to be a possible length for the region. Otherwise, we don't do
-			// the stripping, since the original number could be a valid number.
-			// For example, in some countries (Russia, Belarus) the same digit
-			// could be both a national prefix and a leading digit of a valid
-			// national phone number, like `8` is the national prefix for Russia
-			// and `800 555 35 35` is a valid national (significant) number.
-			if (matchesEntirely(number, metadata.nationalNumberPattern()) &&
-				!matchesEntirely(nationalNumber, metadata.nationalNumberPattern())) {
-				// Don't strip national prefix or carrier code.
-			} else {
+			if (shouldExtractNationalPrefix(number, nationalNumber, metadata)) {
 				return {
 					nationalNumber,
+					nationalPrefix,
 					carrierCode
 				}
 			}
@@ -284,6 +297,35 @@ export function stripNationalPrefixAndCarrierCode(number, metadata) {
    return {
    	nationalNumber: number
    }
+}
+
+// In some countries, the same digit could be a national prefix
+// or a leading digit of a valid phone number.
+// For example, in Russia, national prefix is `8`,
+// and also `800 555 35 35` is a valid number
+// in which `8` is not a national prefix, but the first digit
+// of a national (significant) number.
+// Same's with Belarus:
+// `82004910060` is a valid national (significant) number,
+// but `2004910060` is not.
+// To support such cases (to prevent the code from always stripping
+// national prefix), a condition is imposed: a national prefix
+// is not extracted when the original number is "viable" and the
+// resultant number is not, a "viable" national number being the one
+// that matches `national_number_pattern`.
+function shouldExtractNationalPrefix(number, nationalSignificantNumber, metadata) {
+	// The equivalent in Google's code is:
+	// https://github.com/google/libphonenumber/blob/e326fa1fc4283bb05eb35cb3c15c18f98a31af33/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberUtil.java#L2969-L3004
+	if (matchesEntirely(number, metadata.nationalNumberPattern()) &&
+		!matchesEntirely(nationalSignificantNumber, metadata.nationalNumberPattern())) {
+		return false
+	}
+	// Just "possible" number check would be more relaxed, so it's not used.
+	// if (isPossibleNumber(number, metadata) &&
+	// 	!isPossibleNumber(numberWithNationalPrefixExtracted, metadata)) {
+	// 	return false
+	// }
+	return true
 }
 
 export function findCountryCode(callingCode, nationalPhoneNumber, metadata) {
@@ -388,7 +430,7 @@ function parsePhoneNumber(
 	// Choose a country by `countryCallingCode`.
 	let country
 	if (countryCallingCode) {
-		metadata.chooseCountryByCountryCallingCode(countryCallingCode)
+		metadata.selectNumberingPlan(countryCallingCode)
 	}
 	// If `formattedPhoneNumber` is in "national" format
 	// then `number` is defined and `countryCallingCode` isn't.
@@ -415,7 +457,7 @@ function parsePhoneNumber(
 	const {
 		nationalNumber,
 		carrierCode
-	} = stripNationalPrefixAndCarrierCodeFromCompleteNumber(
+	} = extractNationalNumber(
 		parseIncompletePhoneNumber(number),
 		metadata
 	)
@@ -460,7 +502,7 @@ function parsePhoneNumber(
  * @param  {Metadata} metadata — Metadata with a phone numbering plan selected.
  * @return {object} `{ nationalNumber: string, carrierCode: string? }`.
  */
-export function stripNationalPrefixAndCarrierCodeFromCompleteNumber(number, metadata) {
+export function extractNationalNumber(number, metadata) {
 	// Parsing national prefixes and carrier codes
 	// is only required for local phone numbers
 	// but some people don't understand that
@@ -473,13 +515,13 @@ export function stripNationalPrefixAndCarrierCodeFromCompleteNumber(number, meta
 	const {
 		nationalNumber,
 		carrierCode
-	} = stripNationalPrefixAndCarrierCode(
-		parseIncompletePhoneNumber(number),
+	} = extractNationalNumberFromPossiblyIncompleteNumber(
+		number,
 		metadata
 	)
 	// If a national prefix has been extracted, check to see
 	// if the resultant number isn't too short.
-	if (nationalNumber.length !== number.length + (carrierCode ? carrierCode.length : 0)) {
+	if (number.length !== nationalNumber.length + (carrierCode ? carrierCode.length : 0)) {
 		// If not using legacy generated metadata (before version `1.0.18`)
 		// then it has "possible lengths", so use those to validate the number length.
 		if (metadata.possibleLengths()) {
@@ -488,7 +530,7 @@ export function stripNationalPrefixAndCarrierCodeFromCompleteNumber(number, meta
 			// Otherwise, we don't do the stripping, since the original number could be
 			// a valid short number."
 			// https://github.com/google/libphonenumber/blob/876268eb1ad6cdc1b7b5bef17fc5e43052702d57/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberUtil.java#L3236-L3250
-			switch (checkNumberLengthForType(nationalNumber, undefined, metadata)) {
+			switch (checkNumberLength(nationalNumber, metadata)) {
 				case 'TOO_SHORT':
 				case 'INVALID_LENGTH':
 				// case 'IS_POSSIBLE_LOCAL_ONLY':
@@ -590,7 +632,7 @@ export function extractCountryCallingCode(
 	while (i - 1 <= MAX_LENGTH_COUNTRY_CODE && i <= number.length) {
 		const countryCallingCode = number.slice(1, i)
 		if (metadata.hasCallingCode(countryCallingCode)) {
-			metadata.selectNumberingPlan(undefined, countryCallingCode)
+			metadata.selectNumberingPlan(countryCallingCode)
 			return {
 				countryCallingCode,
 				number: number.slice(i)
@@ -624,13 +666,13 @@ export function extractCountryCallingCodeFromInternationalNumberWithoutPlusSign(
 		const possibleShorterNumber = number.slice(countryCallingCode.length)
 		const {
 			nationalNumber: possibleShorterNationalNumber,
-		} = stripNationalPrefixAndCarrierCode(
+		} = extractNationalNumber(
 			possibleShorterNumber,
 			metadata
 		)
 		const {
 			nationalNumber
-		} = stripNationalPrefixAndCarrierCode(
+		} = extractNationalNumber(
 			number,
 			metadata
 		)
@@ -649,7 +691,7 @@ export function extractCountryCallingCodeFromInternationalNumberWithoutPlusSign(
 				matchesEntirely(possibleShorterNationalNumber, metadata.nationalNumberPattern())
 			)
 			||
-			checkNumberLengthForType(nationalNumber, undefined, metadata) === 'TOO_LONG'
+			checkNumberLength(nationalNumber, metadata) === 'TOO_LONG'
 		) {
 			return {
 				countryCallingCode,

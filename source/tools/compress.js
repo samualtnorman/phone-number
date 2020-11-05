@@ -38,6 +38,7 @@ function compressNumberingPlan(country) {
 				format.leading_digits_patterns,
 				format.national_prefix_formatting_rule,
 				format.national_prefix_is_optional_when_formatting,
+				// format.domestic_carrier_code_formatting_rule,
 				format.international_format
 			]
 
@@ -87,6 +88,10 @@ function compressNumberingPlan(country) {
 	country_array.push(country.default_idd_prefix)
 
 	country_array.push(country.ext)
+
+	// // Currently, there're no countries having
+	// // `domestic_carrier_code_formatting_rule` at the root level.
+	// country_array.push(country.domestic_carrier_code_formatting_rule)
 
 	return trimArray(country_array)
 }

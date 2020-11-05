@@ -281,6 +281,8 @@ export default function(input, version, included_countries, extended, included_p
 				//
 				// Can be `undefined`.
 				//
+				// Maybe rename this property to `national_prefix_transform_rule`.
+				//
 				national_prefix_formatting_rule: getNationalPrefixFormattingRule(territory.$.nationalPrefixFormattingRule, territory.$.nationalPrefix),
 
 				// Is it possible that a national (significant)
@@ -295,28 +297,16 @@ export default function(input, version, included_countries, extended, included_p
 				//
 				// national_prefix_is_optional_when_formatting: territory.$.nationalPrefixOptionalWhenFormatting ? Boolean(territory.$.nationalPrefixOptionalWhenFormatting) : undefined,
 
-				// I suppose carrier codes can be omitted.
-				// They are required only for Brazil and Columbia,
-				// and only when calling to fixed line numbers
-				// from mobile phones within those countries.
-				// I guess people living in those countries
-				// would know that they need to add carrier codes.
-				// Other people don't need to know that.
-				// Anyway, if someone sends a Pull Request
-				// implementing carrier codes as Google's `libphonenumber` does
-				// then such Pull Request will likely be merged.
+				// In some countries carrier code is required
+				// to dial certain phone numbers.
 				//
-				// // In some countries carrier code is required
-				// // to dial certain phone numbers.
-				// //
-				// // E.g. in Colombia calling to fixed line numbers
-				// // from mobile phones requires a carrier code when called within Colombia.
-				// // Or, for example, Brazilian fixed line and mobile numbers
-				// // need to be dialed with a carrier code when called within Brazil.
-				// // Without that, most of the carriers won't connect the call.
-				// // These are the only two cases when "carrier codes" are required.
-				// //
-				// carrier_code_formatting_rule: territory.$.carrierCodeFormattingRule,
+				// E.g. in Colombia calling to fixed line numbers
+				// from mobile phones requires a carrier code when called within Colombia.
+				// Or, for example, Brazilian fixed line and mobile numbers
+				// need to be dialed with a carrier code when called within Brazil.
+				// Without that, most of the carriers won't connect the call.
+				//
+				domestic_carrier_code_formatting_rule: territory.$.carrierCodeFormattingRule,
 
 				// These `types` will be purged later,
 				// if they're not needed (which is most likely).
@@ -350,32 +340,27 @@ export default function(input, version, included_countries, extended, included_p
 			// Some countries don't have `availableFormats` specified,
 			// because those formats are inherited from the "main country for region":
 			// all non-"main" countries inherit their formats from the "main" country for that region.
-			if (territory.availableFormats)
-			{
-				country.formats = territory.availableFormats[0].numberFormat.map((number_format) =>
-				({
+			if (territory.availableFormats) {
+				country.formats = territory.availableFormats[0].numberFormat.map((number_format) => ({
 					pattern: number_format.$.pattern,
 					leading_digits_patterns: number_format.leadingDigits ? number_format.leadingDigits.map(leading_digits => leading_digits.replace(/\s/g, '')) : undefined,
 					national_prefix_formatting_rule: getNationalPrefixFormattingRule(number_format.$.nationalPrefixFormattingRule, territory.$.nationalPrefix),
 					national_prefix_is_optional_when_formatting: number_format.$.nationalPrefixOptionalWhenFormatting ? Boolean(number_format.$.nationalPrefixOptionalWhenFormatting) : undefined,
 					format: number_format.format[0],
-					international_format: number_format.intlFormat ? number_format.intlFormat[0] : undefined
+					international_format: number_format.intlFormat ? number_format.intlFormat[0] : undefined,
+					domestic_carrier_code_formatting_rule: number_format.$.carrierCodeFormattingRule
 				}))
 				// Screw local-only formats
 				.filter(format => format.international_format !== 'NA')
 
 				// Sanity check (using no "default" for this field)
-				for (const format of country.formats)
-				{
+				for (const format of country.formats) {
 					// Never happens
-					if (!format.format)
-					{
+					if (!format.format) {
 						throw new Error(`No phone number format "format" supplied for pattern ${format.pattern} for ${country_code}`)
 					}
-
 					// Never happens
-					if (format.format.indexOf(DIGIT_PLACEHOLDER) >= 0)
-					{
+					if (format.format.indexOf(DIGIT_PLACEHOLDER) >= 0) {
 						throw new Error(`Phone number format "${format.format}" contains a reserved "${DIGIT_PLACEHOLDER}" symbol for pattern ${format.pattern} for ${country_code}`)
 					}
 				}

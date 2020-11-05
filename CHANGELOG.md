@@ -1,3 +1,5 @@
+<!-- Maybe rename `metadata.full.json` -> `metadata.max.json`. -->
+
 <!-- (breaking change) Moved `findPhoneNumbersInText()` to its own subpackage: `libphonenumber-js/find`. The default export is `searchPhoneNumbersInText()` that returns an ES6 "iterator". -->
 
 <!-- Renamed source files: `parsePhoneNumber.js` -> `parsePhoneNumberWithError.js`, etc. -->
@@ -60,6 +62,17 @@ And edit the README:
 -->
 
 <!-- (breaking change) Changed `countries` and `country_calling_codes` properties in metadata: now they're not properties but rather elements of an array (`countries` is an array now rather than an object; `countries` is `metadata[0]` and `country_calling_codes` is `metadata[1]`). If you were using a custom-generated metadata then it has to be re-generated for the new version. -->
+
+1.9.5 / 05.11.2020
+==================
+
+* Refactored `AsYouType` formatter.
+
+* [Fixed](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/23) `AsYouType` formatter not formatting numbers in some cases like, for example, certain types of Argentinian mobile numbers.
+
+<!-- * Found out that all previous `metadata` was missing `domestic_carrier_code_formatting_rule` that is used in a few countries (like Argentina) when formatting phone numbers containing "carrier codes". It has been added now. -->
+
+* `humanReadable` option of `"IDD"` formatting has been removed: now it's always `true`. The rationale is that Google's `formatOutOfCountryCallingNumber()` original function always formats in "human readable" format.
 
 1.8.3 / 03.10.2020
 ==================
