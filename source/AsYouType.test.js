@@ -210,7 +210,7 @@ describe('as you type', () => {
 		// Brazil
 
 		formatter = new AsYouType('BR')
-		formatter.input('11987654321').should.equal('11 98765-4321')
+		formatter.input('11987654321').should.equal('(11) 98765-4321')
 
 		// UK (Jersey) (non-main country for +44 country phone code)
 
@@ -218,18 +218,6 @@ describe('as you type', () => {
 		formatter.input('+447700300000').should.equal('+44 7700 300000')
 		formatter.template.should.equal('xxx xxxx xxxxxx')
 		formatter.country.should.equal('JE')
-
-		// Test Afghanistan phone numbers
-
-		formatter = new AsYouType('AF')
-
-		// No national prefix
-		formatter.input('44444444').should.equal('44444444')
-		type(formatter.template).should.equal('undefined')
-
-		// With national prefix
-		formatter.reset().input('044444444').should.equal('044 444 444')
-		formatter.template.should.equal('xxx xxx xxxx')
 
 		// Braces must be part of the template.
 		formatter = new AsYouType('RU')
@@ -249,13 +237,6 @@ describe('as you type', () => {
 		formatter.input('1234').should.equal('8 (999) 123-4')
 		formatter.input('567').should.equal('8 (999) 123-45-67')
 		formatter.input('8').should.equal('899912345678')
-
-		// // Shouldn't strip national prefix if it is optional
-		// // and if it's a valid phone number.
-		// formatter = new AsYouType('RU')
-		// // formatter.input('8005553535').should.equal('(800) 555-35-35')
-		// formatter.input('8005553535')
-		// formatter.getNationalNumber().should.equal('8005553535')
 
 		// Shouldn't strip national prefix if it is optional
 		// and if it's a valid phone number (international).
@@ -289,13 +270,6 @@ describe('as you type', () => {
 		// (should not prepend national prefix `0`)
 		new AsYouType('BG').input('111 222 3').should.equal('1112223')
 
-		// Brazil
-		// (should not add braces around `12`
-		//  because the phone number is being output in the international format)
-		new AsYouType().input('+55123456789').should.equal('+55 12 3456 789')
-		new AsYouType('BR').input('+55123456789').should.equal('+55 12 3456 789')
-		new AsYouType('BR').input('123456789').should.equal('12 3456-789')
-
 		// Deutchland
 		new AsYouType().input('+4915539898001').should.equal('+49 15539 898001')
 
@@ -312,6 +286,69 @@ describe('as you type', () => {
 		formatter = new AsYouType()
 		formatter.input('+82111111111').should.equal('+82 11 111 1111')
 		formatter.template.should.equal('xxx xx xxx xxxx')
+	})
+
+	it('should filter out formats that require a national prefix and no national prefix has been input', () => {
+		// Afghanistan.
+		const formatter = new AsYouType('AF')
+
+		// No national prefix, and national prefix is required in the format.
+		// (not `"national_prefix_is_optional_when_formatting": true`)
+		formatter.input('44444444').should.equal('44444444')
+		expect(formatter.template).to.be.undefined
+
+		// With national prefix
+		formatter.reset().input('044444444').should.equal('044 444 444')
+		formatter.template.should.equal('xxx xxx xxxx')
+	})
+
+	it('should work when a digit is not a national prefix but a part of a valid national number', () => {
+		// In Russia, `8` could be both a valid national prefix
+		// and a part of a valid national number.
+		const formatter = new AsYouType('RU')
+		// The formatter could try both variants:
+		// with extracting national prefix
+		// and without extracting it,
+		// and then choose whichever way has `this.matchingFormats`.
+		// Or there could be two instances of the formatter:
+		// one that extracts national prefix and one that doesn't,
+		// and then the one that has `this.matchingFormats` would be
+		// used to format the phone number.
+		// Something like an option `extractNationalPrefix: false`
+		// and creating `this.withNationalPrefixFormatter = new AsYouType(this.defaultCountry || this.defaultCallingCode, { metadata, extractNationalPrefix: false })`
+		// and something like `this.withNationalPrefixFormatter.input(nextDigits)` in `input(nextDigits)`.
+		// But, for this specific case, it's not required:
+		// in Russia, people are used to inputting `800` numbers with national prefix `8`:
+		// `8 800 555 35 35`.
+		// formatter.input('8005553535').should.equal('(800) 555-35-35')
+		formatter.input('8005553535').should.equal('8005553535')
+		formatter.reset()
+		formatter.input('+78005553535').should.equal('+7 800 555 35 35')
+	})
+
+	it('should match formats that require a national prefix and no national prefix has been input (national prefix is mandatory for a format)', () => {
+		const formatter = new AsYouType('FR')
+		formatter.input('612345678').should.equal('612345678')
+		formatter.reset()
+		formatter.input('0612345678').should.equal('06 12 34 56 78')
+	})
+
+	it('should match formats that require a national prefix and no national prefix has been input (national prefix is not mandatory for a format)', () => {
+		const formatter = new AsYouType('RU')
+		// Without national prefix.
+		formatter.input('9991234567').should.equal('999 123-45-67')
+		formatter.reset()
+		// With national prefix.
+		formatter.input('89991234567').should.equal('8 (999) 123-45-67')
+	})
+
+	it('should not use `national_prefix_formatting_rule` when formatting international phone numbers', () => {
+		// Brazil.
+		// `national_prefix_formatting_rule` is `($1)`.
+		// Should not add braces around `12` when being input in international format.
+		new AsYouType().input('+55123456789').should.equal('+55 12 3456 789')
+		new AsYouType('BR').input('+55123456789').should.equal('+55 12 3456 789')
+		new AsYouType('BR').input('123456789').should.equal('(12) 3456-789')
 	})
 
 	it('should support incorrectly entered international phone numbers (with a national prefix)', () => {
@@ -462,12 +499,6 @@ describe('as you type', () => {
 		type(formatter.country).should.equal('undefined')
 		formatter.countryCallingCode.should.equal('1')
 
-		// An otherwise matching phone number format is skipped
-		// when it requires a national prefix but no national prefix was entered.
-		formatter = new AsYouType('CN')
-		formatter.input('01010000').should.equal('010 10000')
-		formatter.reset().input('1010000').should.equal('10 1000 0')
-
 		// Reset a chosen format when it no longer applies given the new leading digits.
 		// If Google changes metadata for England then this test might not cover the case.
 		formatter = new AsYouType('GB')
@@ -475,6 +506,48 @@ describe('as you type', () => {
 		// New leading digits don't match the format previously chosen.
 		// Reset the format.
 		formatter.input('0').should.equal('0845 0')
+	})
+
+	it('should choose between matching formats based on the absence or presence of a national prefix', () => {
+		// The first matching format:
+		// {
+		//    "pattern": "(\\d{2})(\\d{5,6})",
+		//    "leading_digits_patterns": [
+		//       "(?:10|2[0-57-9])[19]",
+		//       "(?:10|2[0-57-9])(?:10|9[56])",
+		//       "(?:10|2[0-57-9])(?:100|9[56])"
+		//    ],
+		//    "national_prefix_formatting_rule": "0$1",
+		//    "format": "$1 $2",
+		//    "domestic_carrier_code_formatting_rule": "$CC $FG"
+		// }
+		//
+		// The second matching format:
+		// {
+		//    "pattern": "(\\d{2})(\\d{4})(\\d{4})",
+		//    "leading_digits_patterns": [
+		//       "10|2(?:[02-57-9]|1[1-9])",
+		//       "10|2(?:[02-57-9]|1[1-9])",
+		//       "10[0-79]|2(?:[02-57-9]|1[1-79])|(?:10|21)8(?:0[1-9]|[1-9])"
+		//    ],
+		//    "national_prefix_formatting_rule": "0$1",
+		//    "national_prefix_is_optional_when_formatting": true,
+		//    "format": "$1 $2 $3",
+		//    "domestic_carrier_code_formatting_rule": "$CC $FG"
+		// }
+		//
+		const formatter = new AsYouType('CN')
+		// National prefix has been input.
+		// Chooses the first format.
+		formatter.input('01010000').should.equal('010 10000')
+		formatter.reset()
+		// No national prefix has been input,
+		// and `national_prefix_for_parsing` not matched.
+		// The first format won't match, because it doesn't have
+		// `"national_prefix_is_optional_when_formatting": true`.
+		// The second format will match, because it does have
+		// `"national_prefix_is_optional_when_formatting": true`.
+		formatter.input('1010000').should.equal('10 1000 0')
 	})
 
 	it('should not accept phone number extensions', () => {
@@ -526,22 +599,41 @@ describe('as you type', () => {
 		phoneNumber.number.should.equal('+111')
 	})
 
-	it('should work with Argentina numbers', () => {
-		// The same mobile number is written differently
-		// in different formats in Argentina:
-		// `9` gets prepended in international format.
+	it('should work with countries that add digits to national (significant) number', () => {
+		// When formatting Argentinian mobile numbers in international format,
+		// a `9` is prepended, when compared to national format.
 		const asYouType = new AsYouType('AR')
 		asYouType.input('+5493435551212').should.equal('+54 9 3435 55 1212')
 		asYouType.reset()
-		// Digits shouldn't be changed.
-		// Normally parses and formats `034 35 15 55 1212` as `03934 35-55-1212`.
-		// So, in this case, doesn't format the number, because it has detected
-		// that digits would be changed otherwise.
-		// asYouType.input('0343515551212').should.equal('03435 15-55-1212')
-		asYouType.input('0343515551212').should.equal('0343515551212')
+		// Digits shouldn't be changed when formatting in national format.
+		// (no `9` is prepended).
+		// First parses national (significant) number by prepending `9` to it
+		// and stripping `15` from it.
+		// Then uses `$2 15-$3-$4` format that strips the leading `9`
+		// and adds `15`.
+		asYouType.input('0343515551212').should.equal('03435 15-55-1212')
 	})
 
-	it('should format Argentina numbers (starting with 011)', () => {
+	it('should return non-formatted phone number when no format matches and national (significant) number has digits added', () => {
+		// When formatting Argentinian mobile numbers in international format,
+		// a `9` is prepended, when compared to national format.
+		const asYouType = new AsYouType('AR')
+		// Digits shouldn't be changed when formatting in national format.
+		// (no `9` is prepended).
+		// First parses national (significant) number by prepending `9` to it
+		// and stripping `15` from it.
+		// Then uses `$2 15-$3-$4` format that strips the leading `9`
+		// and adds `15`.
+		// `this.nationalSignificantNumberMatchesInput` is `false` in this case,
+		// so `getNonFormattedNumber()` returns `getFullNumber(getNationalPartOfDigits())`.
+		asYouType.input('0343515551212999').should.equal('0343515551212999')
+	})
+
+	it('should format Argentina numbers (starting with 011) (digit by digit)', () => {
+		// Inputting a number digit-by-digit and as a whole a two different cases
+		// in case of this library compared to Google's `libphonenumber`
+		// that always inputs a number digit-by-digit.
+		// https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/23
 		// nextDigits 0111523456789
 		// nationalNumber 91123456789
 		const formatter = new AsYouType('AR')
@@ -563,6 +655,24 @@ describe('as you type', () => {
 		// `formatter.digits` is not always `formatter.nationalPrefix`
 		// plus `formatter.nationalNumberDigits`.
 		formatter.nationalPrefix.should.equal('0')
+		formatter.isPossible().should.equal(true)
+		formatter.isValid().should.equal(true)
+	})
+
+	it('should format Argentina numbers (starting with 011)', () => {
+		// Inputting a number digit-by-digit and as a whole a two different cases
+		// in case of this library compared to Google's `libphonenumber`
+		// that always inputs a number digit-by-digit.
+		// https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/23
+		// nextDigits 0111523456789
+		// nationalNumber 91123456789
+		const formatter = new AsYouType('AR')
+		formatter.input('01115 23456789').should.equal('011 15-2345-6789')
+		// Private property (not public API).
+		formatter.nationalSignificantNumber.should.equal('91123456789')
+		// `formatter.digits` is not always `formatter.nationalPrefix`
+		// plus `formatter.nationalNumberDigits`.
+		expect(formatter.nationalPrefix).to.be.undefined
 		formatter.isPossible().should.equal(true)
 		formatter.isValid().should.equal(true)
 	})
@@ -884,7 +994,12 @@ describe('as you type', () => {
 		formatter.input('0').should.equal('148800')
 		formatter.input('1').should.equal('1488001')
 		formatter.input('1').should.equal('14880011')
+		// As if were calling US using `14880011` IDD prefix,
+		// though that prefix could mean something else.
 		formatter.input('1').should.equal('14880011 1')
+		formatter.input('2').should.equal('14880011 1 2')
+		formatter.input('1').should.equal('14880011 1 21')
+		formatter.input('3').should.equal('14880011 1 213')
 	})
 })
 

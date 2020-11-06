@@ -381,13 +381,12 @@ class Format {
 		return this.nationalPrefixFormattingRule() &&
 			// Check that national prefix formatting rule is not a "dummy" one.
 			!FIRST_GROUP_ONLY_PREFIX_PATTERN.test(this.nationalPrefixFormattingRule())
-			// Previously, `FIRST_GROUP_ONLY_PREFIX_PATTERN` check was instead done via:
-			// // Check that national prefix formatting rule is not a "dummy" one.
-			// this.nationalPrefixFormattingRule() !== '$1' &&
-			// // Check that national prefix formatting rule actually has national prefix digit(s).
-			// // Filters out cases like "($1)".
-			// // Is used in place of `libphonenumber`'s `FIRST_GROUP_ONLY_PREFIX_PATTERN_` regexp.
-			// /\d/.test(this.nationalPrefixFormattingRule().replace('$1', ''))
+			// In compressed metadata, `this.nationalPrefixFormattingRule()` is `0`
+			// when `national_prefix_formatting_rule` is not present.
+			// So, `true` or `false` are returned explicitly here, so that
+			// `0` number isn't returned.
+			? true
+			: false
 	}
 
 	internationalFormat() {

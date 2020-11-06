@@ -200,8 +200,9 @@ export default class AsYouType {
 		this.nationalSignificantNumber = this.getNationalPartOfDigits()
 		this.nationalSignificantNumberMatchesInput = true
 		this.nationalPrefix = undefined
+		this.hasInputNationalPrefix = false
 		this.carrierCode = undefined
-		this.prefixBeforeNationalSignificantNumber = undefined
+		this.complexPrefixBeforeNationalSignificantNumber = undefined
 		this.hasExtractedNationalSignificantNumber = undefined
 	}
 
@@ -336,7 +337,15 @@ export default class AsYouType {
 		// but in an "out-of-country" dialing format instead of using the leading `+`.
 		// https://github.com/catamphetamine/libphonenumber-js/issues/185
 		// Detect such numbers as soon as there're at least 3 digits.
-		// Google's library attempts to extract IDD prefix at 3 digits.
+		// Google's library attempts to extract IDD prefix at 3 digits,
+		// so this library just copies that behavior.
+		// I guess that's because the most commot IDD prefixes are
+		// `00` (Europe) and `011` (US).
+		// There exist really long IDD prefixes too:
+		// for example, in Australia the default IDD prefix is `0011`,
+		// and it could even be as long as `14880011`.
+		// An IDD prefix is extracted here, and then every time when
+		// there's a new digit and the number couldn't be formatted.
 		if (hasReceivedThreeLeadingDigits) {
 			this.extractIDDPrefix()
 		}
@@ -505,9 +514,9 @@ export default class AsYouType {
 		}
 		// If no format matches the phone number, then it could be
 		// "a really long IDD" (quote from a comment in Google's library).
-		// If the IDD is first extracted when the user has entered at least 3 digits,
-		// then it could mean that "a really long IDD" is the one longer than 3 digits.
-		// Could there be an IDD prefix longer than 3 digits? Seems like it could.
+		// An IDD prefix is first extracted when the user has entered at least 3 digits,
+		// and then here — every time when there's a new digit and the number
+		// couldn't be formatted.
 		// For example, in Australia the default IDD prefix is `0011`,
 		// and it could even be as long as `14880011`.
 		//
@@ -626,53 +635,9 @@ export default class AsYouType {
 			leadingDigitsPatternIndex = 0
 		}
 
-		this.matchingFormats = this.matchingFormats.filter((format) => {
-			// If national prefix is not used when formatting a phone number
-			// using this format, but a national prefix has been entered by the user,
-			// and was extracted, then discard such phone number format.
-			// In Google's "AsYouType" formatter code, the equivalent would be this part:
-			// https://github.com/google/libphonenumber/blob/0a45cfd96e71cad8edb0e162a70fcc8bd9728933/java/libphonenumber/src/com/google/i18n/phonenumbers/AsYouTypeFormatter.java#L175-L184
-			if (this.nationalPrefix &&
-				!format.usesNationalPrefix() &&
-				// !format.domesticCarrierCodeFormattingRule() &&
-				!format.nationalPrefixIsOptionalWhenFormattingInNationalFormat()) {
-				return false
-			}
-			// If national prefix is mandatory for this phone number format
-			// and there're no guarantees that a national prefix is present in user input
-			// then discard this phone number format as not suitable.
-			// In Google's "AsYouType" formatter code, the equivalent would be this part:
-			// https://github.com/google/libphonenumber/blob/0a45cfd96e71cad8edb0e162a70fcc8bd9728933/java/libphonenumber/src/com/google/i18n/phonenumbers/AsYouTypeFormatter.java#L185-L193
-			if (!this.isInternational() &&
-				!this.nationalPrefix &&
-				format.nationalPrefixIsMandatoryWhenFormattingInNationalFormat()) {
-				return false
-			}
-			const leadingDigitsPatternsCount = format.leadingDigitsPatterns().length
-			// If this format is not restricted to a certain
-			// leading digits pattern then it fits.
-			if (leadingDigitsPatternsCount === 0) {
-				return true
-			}
-			// Start excluding any non-matching formats only when the
-			// national number entered so far is at least 3 digits long,
-			// otherwise format matching would give false negatives.
-			// For example, when the digits entered so far are `2`
-			// and the leading digits pattern is `21` –
-			// it's quite obvious in this case that the format could be the one
-			// but due to the absence of further digits it would give false negative.
-			if (leadingDigits.length < MIN_LEADING_DIGITS_LENGTH) {
-				return true
-			}
-			// If at least `MIN_LEADING_DIGITS_LENGTH` digits of a national number are available
-			// then format matching starts narrowing down the list of possible formats
-			// (only previously matched formats are considered for next digits).
-			leadingDigitsPatternIndex = Math.min(leadingDigitsPatternIndex, leadingDigitsPatternsCount - 1)
-			const leadingDigitsPattern = format.leadingDigitsPatterns()[leadingDigitsPatternIndex]
-			// Brackets are required for `^` to be applied to
-			// all or-ed (`|`) parts, not just the first one.
-			return new RegExp(`^(${leadingDigitsPattern})`).test(leadingDigits)
-		})
+		this.matchingFormats = this.matchingFormats.filter(
+			format => this.formatMatches(format, leadingDigits, leadingDigitsPatternIndex)
+		)
 
 		// If there was a phone number format chosen
 		// and it no longer holds given the new leading digits then reset it.
@@ -684,6 +649,64 @@ export default class AsYouType {
 		if (this.chosenFormat && this.matchingFormats.indexOf(this.chosenFormat) === -1) {
 			this.resetFormat()
 		}
+	}
+
+	formatMatches(format, leadingDigits, leadingDigitsPatternIndex) {
+		// When a prefix before a national (significant) number is
+		// simply a national prefix, then it's parsed as `this.nationalPrefix`.
+		// In more complex cases, a prefix before national (significant) number
+		// could include a national prefix as well as some "capturing groups",
+		// and in that case there's no info whether a national prefix has been parsed.
+		// If national prefix is not used when formatting a phone number
+		// using this format, but a national prefix has been entered by the user,
+		// and was extracted, then discard such phone number format.
+		// In Google's "AsYouType" formatter code, the equivalent would be this part:
+		// https://github.com/google/libphonenumber/blob/0a45cfd96e71cad8edb0e162a70fcc8bd9728933/java/libphonenumber/src/com/google/i18n/phonenumbers/AsYouTypeFormatter.java#L175-L184
+		if (this.nationalPrefix &&
+			!format.usesNationalPrefix() &&
+			// !format.domesticCarrierCodeFormattingRule() &&
+			!format.nationalPrefixIsOptionalWhenFormattingInNationalFormat()) {
+			return false
+		}
+		// If national prefix is mandatory for this phone number format
+		// and there're no guarantees that a national prefix is present in user input
+		// then discard this phone number format as not suitable.
+		// In Google's "AsYouType" formatter code, the equivalent would be this part:
+		// https://github.com/google/libphonenumber/blob/0a45cfd96e71cad8edb0e162a70fcc8bd9728933/java/libphonenumber/src/com/google/i18n/phonenumbers/AsYouTypeFormatter.java#L185-L193
+		if (this.hasInputNationalPrefix === false &&
+			!this.isInternational() &&
+			format.nationalPrefixIsMandatoryWhenFormattingInNationalFormat()) {
+			// Could check for `if (!this.nationalPrefix ...` instead,
+			// and then check `this.hasInputNationalPrefix` here,
+			// and if it's `false` then `return `false`, else somehow make the format
+			// a lower-priority one due to it not being known whether a national prefix
+			// has been input or not.
+			return false
+		}
+		const leadingDigitsPatternsCount = format.leadingDigitsPatterns().length
+		// If this format is not restricted to a certain
+		// leading digits pattern then it fits.
+		if (leadingDigitsPatternsCount === 0) {
+			return true
+		}
+		// Start excluding any non-matching formats only when the
+		// national number entered so far is at least 3 digits long,
+		// otherwise format matching would give false negatives.
+		// For example, when the digits entered so far are `2`
+		// and the leading digits pattern is `21` –
+		// it's quite obvious in this case that the format could be the one
+		// but due to the absence of further digits it would give false negative.
+		if (leadingDigits.length < MIN_LEADING_DIGITS_LENGTH) {
+			return true
+		}
+		// If at least `MIN_LEADING_DIGITS_LENGTH` digits of a national number are available
+		// then format matching starts narrowing down the list of possible formats
+		// (only previously matched formats are considered for next digits).
+		leadingDigitsPatternIndex = Math.min(leadingDigitsPatternIndex, leadingDigitsPatternsCount - 1)
+		const leadingDigitsPattern = format.leadingDigitsPatterns()[leadingDigitsPatternIndex]
+		// Brackets are required for `^` to be applied to
+		// all or-ed (`|`) parts, not just the first one.
+		return new RegExp(`^(${leadingDigitsPattern})`).test(leadingDigits)
 	}
 
 	getSeparatorAfterNationalPrefix(format) {
@@ -757,30 +780,47 @@ export default class AsYouType {
 	}
 
 	formatNationalNumberUsingFormat(nationalPrefix, carrierCode, nationalNumber, format) {
-		if (nationalPrefix) {
-			// Here, the number is formatted using a "national prefix formatting rule",
-			// and if the formatted number is a valid formatted number, then it's returned.
-			// Google's AsYouType formatter is different in a way that it doesn't try
-			// to format using the "national prefix formatting rule", and instead it
-			// simply prepends a national prefix followed by a " " character.
-			// This code does that too, but as a fallback.
-			// The reason is that "national prefix formatting rule" may use parentheses,
-			// which wouldn't be included has it used the simpler Google's way.
-			const formattedNumber = formatNationalNumberUsingFormat(
-				nationalNumber,
-				format,
-				{
-					internationalFormat: this.isInternational(),
-					withNationalPrefix: true,
-					carrierCode: carrierCode,
-					metadata: this.metadata
-				}
-			)
-			if (this.isValidFormattedNationalNumber(formattedNumber)) {
-				return formattedNumber
-			}
-		}
+		// This check has already been performed in `.narrowDownPossibleFormats()`,
+		// so no need to re-perform it here.
+		//
+		// let tryNationalPrefixFormat = true
+		// if (this.hasInputNationalPrefix === false) {
+		// 	if (!this.isInternational()) {
+		// 		if (format.nationalPrefixIsMandatoryWhenFormattingInNationalFormat()) {
+		// 			tryNationalPrefixFormat = false
+		// 		}
+		// 	}
+		// }
+		// if (tryNationalPrefixFormat) {
+		// 	formatNationalNumberUsingFormat(..., { ..., withNationalPrefix: true })
+		// }
+
+		// Format the number with using `national_prefix_formatting_rule`.
+		// If the resulting formatted number is a valid formatted number, then return it.
+		//
+		// Google's AsYouType formatter is different in a way that it doesn't try
+		// to format using the "national prefix formatting rule", and instead it
+		// simply prepends a national prefix followed by a " " character.
+		// This code does that too, but as a fallback.
+		// The reason is that "national prefix formatting rule" may use parentheses,
+		// which wouldn't be included has it used the simpler Google's way.
+		//
 		let formattedNumber = formatNationalNumberUsingFormat(
+			nationalNumber,
+			format,
+			{
+				internationalFormat: this.isInternational(),
+				withNationalPrefix: true,
+				carrierCode: carrierCode,
+				metadata: this.metadata
+			}
+		)
+		if (this.isValidFormattedNationalNumber(formattedNumber)) {
+			return formattedNumber
+		}
+
+		// Format the number without using `national_prefix_formatting_rule`.
+		formattedNumber = formatNationalNumberUsingFormat(
 			nationalNumber,
 			format,
 			{
@@ -885,9 +925,9 @@ export default class AsYouType {
 		return formattedNationalNumber
 	}
 
-	getNonFormattedNationalNumber() {
+	getNonFormattedNationalNumberWithPrefix() {
 		let number = this.nationalSignificantNumber
-		const prefix = this.prefixBeforeNationalSignificantNumber || this.nationalPrefix
+		const prefix = this.complexPrefixBeforeNationalSignificantNumber || this.nationalPrefix
 		if (prefix) {
 			number = prefix + number
 		}
@@ -897,7 +937,7 @@ export default class AsYouType {
 	getNonFormattedNumber() {
 		return this.getFullNumber(
 			this.nationalSignificantNumberMatchesInput
-				? this.getNonFormattedNationalNumber()
+				? this.getNonFormattedNationalNumberWithPrefix()
 				: this.getNationalPartOfDigits()
 		)
 	}
@@ -972,6 +1012,12 @@ export default class AsYouType {
 			this.getNationalPartOfDigits(),
 			this.metadata
 		)
+		// If a national prefix has been extracted previously,
+		// then it's always extracted as additional digits are added.
+		// That's assuming `extractNationalNumberFromPossiblyIncompleteNumber()`
+		// doesn't do anything different from what it currently does.
+		// So, just in case, here's this check, though it doesn't occur.
+		/* istanbul ignore if */
 		if (nationalNumber === this.nationalSignificantNumber) {
 			return
 		}
@@ -998,8 +1044,9 @@ export default class AsYouType {
 			this.carrierCode = carrierCode
 		}
 		this.nationalSignificantNumber = nationalNumber
-		this.prefixBeforeNationalSignificantNumber = undefined
+		this.complexPrefixBeforeNationalSignificantNumber = undefined
 		this.nationalSignificantNumberMatchesInput = undefined
+		this.hasInputNationalPrefix = nationalPrefix ? true : false
 		const digits = this.getNationalPartOfDigits()
 		// This check also works with empty `this.nationalSignificantNumber`.
 		const nationalNumberIndex = digits.lastIndexOf(nationalNumber)
@@ -1007,12 +1054,15 @@ export default class AsYouType {
 			this.nationalSignificantNumberMatchesInput = true
 			// If a prefix of a national (significant) number is not as simple
 			// as just a basic national prefix, then such prefix is stored in
-			// `this.prefixBeforeNationalSignificantNumber` property and will be
+			// `this.complexPrefixBeforeNationalSignificantNumber` property and will be
 			// prepended "as is" to the national (significant) number to produce
 			// a formatted result.
-			if (digits !== (nationalPrefix + '') + nationalNumber) {
-				this.prefixBeforeNationalSignificantNumber = digits.slice(0, nationalNumberIndex)
+			if (digits !== (nationalPrefix || '') + nationalNumber) {
+				this.complexPrefixBeforeNationalSignificantNumber = digits.slice(0, nationalNumberIndex)
+				this.hasInputNationalPrefix = undefined
 			}
+		} else {
+			this.hasInputNationalPrefix = undefined
 		}
 
 		this.hasExtractedNationalSignificantNumber = true
@@ -1139,36 +1189,43 @@ export default class AsYouType {
 		let numberFormat = this.getFormatFormat(format)
 		let nationalPrefixIncludedInTemplate
 
-		// If a user did input a national prefix,
+		// If a user did input a national prefix (and that's guaranteed),
 		// and if a `format` does have a national prefix formatting rule,
 		// then see if that national prefix formatting rule
 		// prepends exactly the same national prefix the user has input.
 		// If that's the case, then use the `format` with the national prefix formatting rule.
 		// Otherwise, use  the `format` without the national prefix formatting rule,
 		// and prepend a national prefix manually to it.
-		if (this.nationalPrefix && !this.prefixBeforeNationalSignificantNumber) {
-			if (format.nationalPrefixFormattingRule()) {
-				const numberFormatWithNationalPrefix = numberFormat.replace(
-					FIRST_GROUP_PATTERN,
-					format.nationalPrefixFormattingRule()
-				)
-				// If `national_prefix_formatting_rule` of a `format` simply prepends
-				// national prefix at the start of a national (significant) number,
-				// then such formatting can be used with `AsYouType` formatter.
-				// There seems to be no `else` case: everywhere in metadata,
-				// national prefix formatting rule is national prefix + $1,
-				// or `($1)`, in which case such format isn't even considered
-				// when the user has input a national prefix.
-				/* istanbul ignore else */
-				if (parseDigits(format.nationalPrefixFormattingRule()) === this.nationalPrefix + parseDigits('$1')) {
-					numberFormat = numberFormatWithNationalPrefix
-					nationalPrefixIncludedInTemplate = true
-					// Replace all digits of the national prefix in the formatting template
-					// with `DIGIT_PLACEHOLDER`s.
-					let i = this.nationalPrefix.length
-					while (i > 0) {
-						numberFormat = numberFormat.replace(/\d/, DIGIT_PLACEHOLDER)
-						i--
+		if (format.nationalPrefixFormattingRule()) {
+			if (!this.complexPrefixBeforeNationalSignificantNumber) {
+				// In some countries, `national_prefix_formatting_rule` is `($1)`,
+				// so it applies even if the user hasn't input a national prefix.
+				// `format.usesNationalPrefix()` detects such cases.
+				if (this.nationalPrefix || (!this.isInternational() && !format.usesNationalPrefix())) {
+					const numberFormatWithNationalPrefix = numberFormat.replace(
+						FIRST_GROUP_PATTERN,
+						format.nationalPrefixFormattingRule()
+					)
+					// If `national_prefix_formatting_rule` of a `format` simply prepends
+					// national prefix at the start of a national (significant) number,
+					// then such formatting can be used with `AsYouType` formatter.
+					// There seems to be no `else` case: everywhere in metadata,
+					// national prefix formatting rule is national prefix + $1,
+					// or `($1)`, in which case such format isn't even considered
+					// when the user has input a national prefix.
+					/* istanbul ignore else */
+					if (parseDigits(format.nationalPrefixFormattingRule()) === (this.nationalPrefix || '') + parseDigits('$1')) {
+						numberFormat = numberFormatWithNationalPrefix
+						nationalPrefixIncludedInTemplate = true
+						// Replace all digits of the national prefix in the formatting template
+						// with `DIGIT_PLACEHOLDER`s.
+						if (this.nationalPrefix) {
+							let i = this.nationalPrefix.length
+							while (i > 0) {
+								numberFormat = numberFormat.replace(/\d/, DIGIT_PLACEHOLDER)
+								i--
+							}
+						}
 					}
 				}
 			}
@@ -1185,14 +1242,14 @@ export default class AsYouType {
 		// as just a basic national prefix, then just prepend such prefix
 		// before the national (significant) number, optionally spacing
 		// the two with a whitespace.
-		if (this.prefixBeforeNationalSignificantNumber) {
-			// Prepend the prefix to the template manually.
-			// Using the same separator as for a national prefix (for no specific reason).
-			template = repeat(DIGIT_PLACEHOLDER, this.prefixBeforeNationalSignificantNumber.length) +
-				this.getSeparatorAfterNationalPrefix(format) +
-				template
-		} else if (this.nationalPrefix) {
-			if (!nationalPrefixIncludedInTemplate) {
+		if (!nationalPrefixIncludedInTemplate) {
+			if (this.complexPrefixBeforeNationalSignificantNumber) {
+				// Prepend the prefix to the template manually.
+				// Using the same separator as for a national prefix (for no specific reason).
+				template = repeat(DIGIT_PLACEHOLDER, this.complexPrefixBeforeNationalSignificantNumber.length) +
+					this.getSeparatorAfterNationalPrefix(format) +
+					template
+			} else if (this.nationalPrefix) {
 				// Prepend national prefix to the template manually.
 				template = repeat(DIGIT_PLACEHOLDER, this.nationalPrefix.length) +
 					this.getSeparatorAfterNationalPrefix(format) +

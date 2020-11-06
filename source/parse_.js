@@ -285,12 +285,10 @@ export function extractNationalNumberFromPossiblyIncompleteNumber(number, metada
 					carrierCode = prefixMatch[1]
 				}
 			}
-			if (shouldExtractNationalPrefix(number, nationalNumber, metadata)) {
-				return {
-					nationalNumber,
-					nationalPrefix,
-					carrierCode
-				}
+			return {
+				nationalNumber,
+				nationalPrefix,
+				carrierCode
 			}
 		}
 	}
@@ -519,8 +517,19 @@ export function extractNationalNumber(number, metadata) {
 		number,
 		metadata
 	)
+	if (!shouldExtractNationalPrefix(number, nationalNumber, metadata)) {
+		// Don't strip the national prefix.
+		return { nationalNumber: number }
+	}
 	// If a national prefix has been extracted, check to see
 	// if the resultant number isn't too short.
+	// Same code in Google's `libphonenumber`:
+	// https://github.com/google/libphonenumber/blob/e326fa1fc4283bb05eb35cb3c15c18f98a31af33/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberUtil.java#L3291-L3302
+	// For some reason, they do this check right after the `national_number_pattern` check
+	// this library does in `shouldExtractNationalPrefix()` function.
+	// Why is there a second "resultant" number validity check?
+	// They don't provide an explanation.
+	// This library just copies the behavior.
 	if (number.length !== nationalNumber.length + (carrierCode ? carrierCode.length : 0)) {
 		// If not using legacy generated metadata (before version `1.0.18`)
 		// then it has "possible lengths", so use those to validate the number length.
