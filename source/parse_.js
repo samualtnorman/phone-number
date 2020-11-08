@@ -33,7 +33,9 @@ const MAX_INPUT_STRING_LENGTH = 250
 const PHONE_NUMBER_START_PATTERN = new RegExp('[' + PLUS_CHARS + VALID_DIGITS + ']')
 
 // Regular expression of trailing characters that we want to remove.
-const AFTER_PHONE_NUMBER_END_PATTERN = new RegExp('[^' + VALID_DIGITS + ']+$')
+// A trailing `#` is sometimes used when writing phone numbers with extensions in US.
+// Example: "+1 (645) 123 1234-910#" number has extension "910".
+const AFTER_PHONE_NUMBER_END_PATTERN = new RegExp('[^' + VALID_DIGITS + '#' + ']+$')
 
 const USE_NON_GEOGRAPHIC_COUNTRY_CODE = false
 

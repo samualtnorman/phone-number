@@ -271,7 +271,10 @@ describe('parse', () => {
 		})
 
 		// Not a valid extension
-		parseNumber('2134567890 ext. 1234567890', 'US').should.deep.equal({})
+		parseNumber('2134567890 ext. abc', 'US').should.deep.equal({
+			country : 'US',
+			phone   : '2134567890'
+		})
 	})
 
 	it('should parse RFC 3966 phone numbers', () => {
@@ -486,6 +489,52 @@ describe('parse', () => {
 			country: 'DE',
 			phone: '4951234567890'
 		});
+	})
+
+	it('should parse extensions (long extensions with explicitl abels)', () => {
+		// Test lower and upper limits of extension lengths for each type of label.
+
+		// Firstly, when in RFC format: PhoneNumberUtil.extLimitAfterExplicitLabel
+		parseNumber('33316005 ext 0', 'NZ').ext.should.equal('0')
+		parseNumber('33316005 ext 01234567890123456789', 'NZ').ext.should.equal('01234567890123456789')
+		// Extension too long.
+		expect(parseNumber('33316005 ext 012345678901234567890', 'NZ').ext).to.be.undefined
+
+		// Explicit extension label.
+		parseNumber('03 3316005ext:1', 'NZ').ext.should.equal('1')
+		parseNumber('03 3316005 xtn:12345678901234567890', 'NZ').ext.should.equal('12345678901234567890')
+		parseNumber('03 3316005 extension\t12345678901234567890', 'NZ').ext.should.equal('12345678901234567890')
+		parseNumber('03 3316005 xtensio:12345678901234567890', 'NZ').ext.should.equal('12345678901234567890')
+		parseNumber('03 3316005 xtensión, 12345678901234567890#', 'NZ').ext.should.equal('12345678901234567890')
+		parseNumber('03 3316005extension.12345678901234567890', 'NZ').ext.should.equal('12345678901234567890')
+		parseNumber('03 3316005 доб:12345678901234567890', 'NZ').ext.should.equal('12345678901234567890')
+
+		// Extension too long.
+		expect(parseNumber('03 3316005 extension 123456789012345678901', 'NZ').ext).to.be.undefined
+	})
+
+	it('should parse extensions (long extensions with auto dialling labels)', () => {
+		parseNumber('+12679000000,,123456789012345#').ext.should.equal('123456789012345')
+		parseNumber('+12679000000;123456789012345#').ext.should.equal('123456789012345')
+		parseNumber('+442034000000,,123456789#').ext.should.equal('123456789')
+		// Extension too long.
+		expect(parseNumber('+12679000000,,1234567890123456#').ext).to.be.undefined
+	})
+
+	it('should parse extensions (short extensions with ambiguous characters)', () => {
+		parseNumber('03 3316005 x 123456789', 'NZ').ext.should.equal('123456789')
+		parseNumber('03 3316005 x. 123456789', 'NZ').ext.should.equal('123456789')
+		parseNumber('03 3316005 #123456789#', 'NZ').ext.should.equal('123456789')
+		parseNumber('03 3316005 ~ 123456789', 'NZ').ext.should.equal('123456789')
+		// Extension too long.
+		expect(parseNumber('03 3316005 ~ 1234567890', 'NZ').ext).to.be.undefined
+	})
+
+	it('should parse extensions (short extensions when not sure of label)', () => {
+		parseNumber('+1123-456-7890 666666#', { v2: true }).ext.should.equal('666666')
+		parseNumber('+11234567890-6#', { v2: true }).ext.should.equal('6')
+		// Extension too long.
+		expect(() => parseNumber('+1123-456-7890 7777777#', { v2: true })).to.throw('NOT_A_NUMBER')
 	})
 })
 

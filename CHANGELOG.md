@@ -63,6 +63,10 @@ And edit the README:
 
 <!-- (breaking change) Changed `countries` and `country_calling_codes` properties in metadata: now they're not properties but rather elements of an array (`countries` is an array now rather than an object; `countries` is `metadata[0]` and `country_calling_codes` is `metadata[1]`). If you were using a custom-generated metadata then it has to be re-generated for the new version. -->
 
+1.9.1 / 08.11.2020
+==================
+
+* Merged the latest Google's [patch](https://github.com/google/libphonenumber/commit/55b2646ec9393f4d3d6661b9c82ef9e258e8b829) on parsing phone number extensions.
 
 1.9.0 / 08.11.2020
 ==================
