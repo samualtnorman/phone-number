@@ -1,6 +1,6 @@
 import { parseString } from 'xml2js'
 
-import { DIGIT_PLACEHOLDER } from '../AsYouType'
+import { DIGIT_PLACEHOLDER } from '../AsYouTypeFormatter'
 // import { isSingleIDDPrefix } from '../IDD'
 
 const phone_number_types =

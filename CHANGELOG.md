@@ -63,6 +63,16 @@ And edit the README:
 
 <!-- (breaking change) Changed `countries` and `country_calling_codes` properties in metadata: now they're not properties but rather elements of an array (`countries` is an array now rather than an object; `countries` is `metadata[0]` and `country_calling_codes` is `metadata[1]`). If you were using a custom-generated metadata then it has to be re-generated for the new version. -->
 
+
+1.9.0 / 08.11.2020
+==================
+
+* Refactored `AsYouType` formatter.
+
+* (could be a breaking change for some) Some people might have used _undocumented_ `AsYouType` instance properties like `.countryCallingCode`, `.nationalNumber`, etc: those have been moved to a new `.state` object. The `.state` object is also not a public API, so developers shouldn't use it: use the getter methods instead. The `.country` property of `AsYouType` instance still stays: not because it hasn't been moved (it has been and is emulated), but because it has been part of an official (but now legacy) API of `AsYouType` formatter.
+
+* (misc) Renamed `asYouType` instance method `getCountryCallingCode()` to `getCountryCode()`. The older name still works.
+
 1.8.6 / 05.11.2020
 ==================
 

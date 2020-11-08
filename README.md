@@ -524,7 +524,7 @@ asYouType.getTemplate() === 'xx xxx xxx xxxx'
 
  * `isInternational(): boolean` — Returns `true` if the phone number is being input in international format. In other words, returns `true` if and only if the parsed phone number starts with a `"+"`.
 
- * `getCountryCallingCode(): string` — Returns the ["country calling code"](#country-calling-code) part of the phone number. Returns `undefined` if the number is not being input in international format. Returns "country calling code" for ["non-geographic"](#non-geographic) phone numbering plans too.
+ * `getCallingCode(): string` — Returns the ["country calling code"](#country-calling-code) part of the phone number. Returns `undefined` if the number is not being input in international format. Returns "country calling code" for ["non-geographic"](#non-geographic) phone numbering plans too.
 
  * `getCountry(): string` — Returns a two-letter [country code](#country-code) of the phone number. Returns `undefined` for ["non-geographic"](#non-geographic) phone numbering plans. Returns `undefined` if no phone number has been input yet.
 
@@ -543,7 +543,7 @@ For legacy API (before version `1.6.0`) the formatter instance provides the foll
 
  * `getNationalNumber(): string` — Returns the national (significant) number part of the phone number.
 
- * `getTemplate(): string?` — Returns the template used to format the output. Digits (and the `+` sign, if present) are denoted by `x`-es. Will return `undefined` if no suitable format was found for the number being entered (or if no [national (significant) number](#national-significant-number) has been entered so far).
+ * `getTemplate(): string?` — Same as the current version of `getTemplate()` with the only difference that it returns `undefined` if no suitable format was found for the number being entered (or if no [national (significant) number](#national-significant-number) has been entered so far).
 
 ```js
 // National phone number input example.
@@ -552,19 +552,15 @@ const asYouType = new AsYouType('US')
 
 asYouType.input('2') === '2'
 asYouType.getNationalNumber() === '2'
-asYouType.getTemplate() === 'x'
 
 asYouType.input('1') === '21'
 asYouType.getNationalNumber() === '21'
-asYouType.getTemplate() === 'xx'
 
 asYouType.input('3') === '(213)'
 asYouType.getNationalNumber() === '213'
-asYouType.getTemplate() === '(xxx)'
 
 asYouType.input('3734253') === '(213) 373-4253'
 asYouType.getNationalNumber() === '2133734253'
-asYouType.getTemplate() === '(xxx) xxx-xxxx'
 
 // International phone number input example.
 
@@ -572,7 +568,6 @@ const asYouType = new AsYouType()
 asYouType.input('+1-213-373-4253') === '+1 213 373 4253'
 asYouType.country === 'US'
 asYouType.getNationalNumber() === '2133734253'
-asYouType.getTemplate() === 'xx xxx xxx xxxx'
 ```
 </details>
 

@@ -1,6 +1,7 @@
 import metadata from '../metadata.min.json'
 import _parseNumber from './parse'
-import { extractCountryCallingCode } from './parse_'
+import Metadata from './Metadata'
+import { extractCountryCallingCode, extractNationalNumberFromPossiblyIncompleteNumber } from './parse_'
 
 function parseNumber(...parameters) {
 	parameters.push(metadata)
@@ -485,5 +486,17 @@ describe('parse', () => {
 			country: 'DE',
 			phone: '4951234567890'
 		});
+	})
+})
+
+describe('extractNationalNumberFromPossiblyIncompleteNumber', () => {
+	it('should parse a carrier code when there is no national prefix transform rule', () => {
+		const meta = new Metadata(metadata)
+		meta.country('AU')
+		extractNationalNumberFromPossiblyIncompleteNumber('18311800123', meta).should.deep.equal({
+			nationalPrefix: undefined,
+			carrierCode: '1831',
+			nationalNumber: '1800123'
+		})
 	})
 })

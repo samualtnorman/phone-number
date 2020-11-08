@@ -226,7 +226,7 @@ export function extractFormattedPhoneNumber(text, throwOnError) {
  * it will return `{ number: "3402345678" }`, because `340` area code is prepended.
  * @param {string} number — National number digits.
  * @param {object} metadata — Metadata with country selected.
- * @return {object} `{ nationalNumber: string, nationalPrefix: string? carrierCode: string? }`. Not returning a `nationalPrefix` doesn't imply that the original phone number didn't contain it.
+ * @return {object} `{ nationalNumber: string, nationalPrefix: string? carrierCode: string? }`.
  */
 export function extractNationalNumberFromPossiblyIncompleteNumber(number, metadata) {
 	if (number && metadata.numberingPlan.nationalPrefixForParsing()) {
@@ -237,7 +237,6 @@ export function extractNationalNumberFromPossiblyIncompleteNumber(number, metada
 		const prefixMatch = prefixPattern.exec(number)
 		if (prefixMatch) {
 			let nationalNumber
-			let nationalPrefix
 			let carrierCode
 			// https://gitlab.com/catamphetamine/libphonenumber-js/-/blob/master/METADATA.md#national_prefix_for_parsing--national_prefix_transform_rule
 			// If a `national_prefix_for_parsing` has any "capturing groups"
@@ -275,15 +274,39 @@ export function extractNationalNumberFromPossiblyIncompleteNumber(number, metada
 			// and possibly a carrier code.
 			// Seems like there could be more.
 			else {
-				// National prefix is the whole substring matched by
+				// `prefixBeforeNationalNumber` is the whole substring matched by
 				// the `national_prefix_for_parsing` regular expression.
-				nationalPrefix = prefixMatch[0]
-				nationalNumber = number.slice(nationalPrefix.length)
+				// There seem to be no guarantees that it's just a national prefix.
+				// For example, if there's a carrier code, it's gonna be a
+				// part of `prefixBeforeNationalNumber` too.
+				const prefixBeforeNationalNumber = prefixMatch[0]
+				nationalNumber = number.slice(prefixBeforeNationalNumber.length)
 				// If there's at least one captured group,
 				// then carrier code is the first one.
-				if (capturedGroupsCount > 0) {
+				if (hasCapturedGroups) {
 					carrierCode = prefixMatch[1]
 				}
+			}
+			// Tries to guess whether a national prefix was present in the input.
+			// This is not something copy-pasted from Google's library:
+			// they don't seem to have an equivalent for that.
+			// So this isn't an "officially approved" way of doing something like that.
+			// But since there seems no other existing method, this library uses it.
+			let nationalPrefix
+			if (hasCapturedGroups) {
+				const possiblePositionOfTheFirstCapturedGroup = number.indexOf(prefixMatch[1])
+				const possibleNationalPrefix = number.slice(0, possiblePositionOfTheFirstCapturedGroup)
+				// Example: an Argentinian (AR) phone number `0111523456789`.
+				// `prefixMatch[0]` is `01115`, and `$1` is `11`,
+				// and the rest of the phone number is `23456789`.
+				// The national number is transformed via `9$1` to `91123456789`.
+				// National prefix `0` is detected being present at the start.
+				// if (possibleNationalPrefix.indexOf(metadata.numberingPlan.nationalPrefix()) === 0) {
+				if (possibleNationalPrefix === metadata.numberingPlan.nationalPrefix()) {
+					nationalPrefix = metadata.numberingPlan.nationalPrefix()
+				}
+			} else {
+				nationalPrefix = prefixMatch[0]
 			}
 			return {
 				nationalNumber,

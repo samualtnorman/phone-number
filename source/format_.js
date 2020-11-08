@@ -119,7 +119,7 @@ export function formatNationalNumberUsingFormat(
 	number,
 	format,
 	{
-		internationalFormat,
+		useInternationalFormat,
 		withNationalPrefix,
 		carrierCode,
 		metadata
@@ -127,7 +127,7 @@ export function formatNationalNumberUsingFormat(
 ) {
 	const formattedNumber = number.replace(
 		new RegExp(format.pattern()),
-		internationalFormat
+		useInternationalFormat
 			? format.internationalFormat()
 			: (
 				// This library doesn't use `domestic_carrier_code_formatting_rule`,
@@ -148,7 +148,7 @@ export function formatNationalNumberUsingFormat(
 					: format.format()
 			)
 	)
-	if (internationalFormat) {
+	if (useInternationalFormat) {
 		return applyInternationalSeparatorStyle(formattedNumber)
 	}
 	return formattedNumber
@@ -163,7 +163,7 @@ function formatNationalNumber(number, carrierCode, formatAs, metadata, options) 
 		number,
 		format,
 		{
-			internationalFormat: formatAs === 'INTERNATIONAL',
+			useInternationalFormat: formatAs === 'INTERNATIONAL',
 			withNationalPrefix: format.nationalPrefixIsOptionalWhenFormattingInNationalFormat() && (options && options.nationalPrefix === false) ? false : true,
 			carrierCode,
 			metadata
