@@ -2,9 +2,7 @@ import minimist from 'minimist'
 import path from 'path'
 import fs from 'fs'
 
-import { generate, compress } from 'libphonenumber-metadata-generator'
-
-const libphonenumberVersion = require('../package.json').version
+import { version, generate, compress } from 'libphonenumber-metadata-generator'
 
 // const REGION_CODE_FOR_NON_GEO_ENTITY = '001'
 
@@ -37,7 +35,7 @@ if (command_line_arguments.types) {
 }
 
 // Generate and compress metadata
-generate(input, libphonenumberVersion, included_countries, extended, included_phone_number_types).then((output) => {
+generate(input, version, included_countries, extended, included_phone_number_types).then((output) => {
 	// Write uncompressed metadata into a file for easier debugging
 	if (command_line_arguments.debug) {
 		console.log('Output uncompressed JSON for debugging')

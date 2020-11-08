@@ -507,10 +507,23 @@ export function isSupportedCountry(country, metadata) {
 }
 
 function setVersion(metadata) {
-	this.v1 = !metadata.version
-	this.v2 = metadata.version !== undefined && compare(metadata.version, V3) === -1
-	this.v3 = metadata.version !== undefined && compare(metadata.version, V4) === -1
-	this.v4 = metadata.version !== undefined // && compare(metadata.version, V5) === -1
+	const { version } = metadata
+	if (typeof version === 'number') {
+		this.v1 = version === 1
+		this.v2 = version === 2
+		this.v3 = version === 3
+		this.v4 = version === 4
+	} else {
+		if (!version) {
+			this.v1 = true
+		} else if (compare(version, V3) === -1) {
+			this.v2 = true
+		} else if (compare(version, V4) === -1) {
+			this.v3 = true
+		} else {
+			this.v4 = true
+		}
+	}
 }
 
 // const ISO_COUNTRY_CODE = /^[A-Z]{2}$/
