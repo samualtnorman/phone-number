@@ -1,5 +1,4 @@
-// The digits that have not been entered yet will be represented by a \u2008,
-// the punctuation space.
+// Should be the same as `DIGIT_PLACEHOLDER` in `libphonenumber-metadata-generator`.
 export const DIGIT_PLACEHOLDER = 'x' // '\u2008' (punctuation space)
 const DIGIT_PLACEHOLDER_MATCHER = new RegExp(DIGIT_PLACEHOLDER)
 

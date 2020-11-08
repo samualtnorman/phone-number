@@ -69,9 +69,11 @@ And edit the README:
 
 * Refactored `AsYouType` formatter.
 
-* (could be a breaking change for some) Some people might have used _undocumented_ `AsYouType` instance properties like `.countryCallingCode`, `.nationalNumber`, etc: those have been moved to a new `.state` object. The `.state` object is also not a public API, so developers shouldn't use it: use the getter methods instead. The `.country` property of `AsYouType` instance still stays: not because it hasn't been moved (it has been and is emulated), but because it has been part of an official (but now legacy) API of `AsYouType` formatter.
+* (could be a breaking change for some) Some people might have used some of the _undocumented_ `AsYouType` instance properties like `.countryCallingCode`, `.nationalNumber`, etc: those have been moved to a new `.state` object. The `.state` object is also not part of the public API, so developers shouldn't use it: use the documented getter methods instead. The `.country` property of `AsYouType` instance still stays: not because it hasn't been moved (it has been and is emulated), but because it has been part of an official (now legacy) API of `AsYouType` formatter.
 
 * (misc) Renamed `asYouType` instance method `getCountryCallingCode()` to `getCountryCode()`. The older name still works.
+
+* (could be a _build-time_ breaking change for custom metadata) For those who were generating custom metadata, the `libphonenumber-generate-metadata` console command has been moved to a separate package called `libphonenumber-metadata-generator`. The applications that're using it should do `npm install libphonenumber-metadata-generator --save-dev` and then use the new `libphonenumber-metadata-generator` command instead of the old one (only the name changed). [See instructions](https://gitlab.com/catamphetamine/libphonenumber-metadata-generator).
 
 1.8.6 / 05.11.2020
 ==================

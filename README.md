@@ -1203,35 +1203,10 @@ This library comes prepackaged with [three types of metadata](#min-vs-max-vs-mob
 
 Sometimes, if only a specific set of countries is needed in a project, and a developer really wants to reduce the resulting bundle size, say, by 50 kilobytes (even when including all regular expressions for validating phone number digits and detecting phone number type), then they can generate such custom metadata and pass it as the last argument to this library's "core" functions.
 
-<details>
-<summary>See generate custom metadata instructions.</summary>
-
-####
-
-First, add metadata generation script to **your project's** `package.json`
-
-```js
-{
-  "scripts": {
-    "libphonenumber-metadata": "libphonenumber-generate-metadata metadata.custom.json --countries RU,DE --extended",
-  }
-}
-```
-
-And then run it like `npm run libphonenumber-metadata`.
-
-The arguments are:
-
-* The first argument is the output metadata file path.
-* `--countries` argument is a comma-separated list of the countries included (if `--countries` is omitted then all countries are included).
-* `--extended` argument may be passed to include all regular expressions for precise phone number validation and getting phone number type, which will enlarge the resulting metadata size approximately twice.
-* `--types ...` argument may be passed instead of `--extended` to generate metadata that _only_ supports the selected phone number types (a comma-separated list, e.g. `--types mobile,fixed_line`). [See the list of all possible phone number types](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/source/tools/generate.js#L6-L18). Other phone number types will still be parseable, but they won't be recognized as being "valid" (`.isValid()` will return `false`), and also their "type" won't be detected (`.getType()` will return `undefined`).
-</details>
-
-####
+See [generate custom metadata instructions](https://gitlab.com/catamphetamine/libphonenumber-metadata-generator).
 
 <details>
-<summary>Then use the generated <code>metadata.custom.json</code> file with the "core" functions.</summary>
+<summary>Then, use the generated <code>metadata.custom.json</code> file with the "core" functions.</summary>
 
 ####
 
