@@ -9,7 +9,7 @@ class AsYouType extends AsYouType_ {
 
 const USE_NON_GEOGRAPHIC_COUNTRY_CODE = false
 
-describe('as you type', () => {
+describe('AsYouType', () => {
 	it('should use "national_prefix_formatting_rule"', () => {
 		// With national prefix (full).
 		new AsYouType('RU').input('88005553535').should.equal('8 (800) 555-35-35')
@@ -1044,6 +1044,16 @@ describe('as you type', () => {
 		formatter.input('2').should.equal('14880011 1 2')
 		formatter.input('1').should.equal('14880011 1 21')
 		formatter.input('3').should.equal('14880011 1 213')
+	})
+
+	it('should return the phone number characters entered by the user', () => {
+		const formatter = new AsYouType('RU')
+		formatter.getChars().should.equal('')
+		formatter.input('+123')
+		formatter.getChars().should.equal('+123')
+		formatter.reset()
+		formatter.input('123')
+		formatter.getChars().should.equal('123')
 	})
 })
 

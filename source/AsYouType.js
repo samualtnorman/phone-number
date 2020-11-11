@@ -350,6 +350,14 @@ export default class AsYouType {
 	}
 
 	/**
+	 * Returns the phone number characters entered by the user.
+	 * @return {string}
+	 */
+	getChars() {
+		return (this.state.international ? '+' : '') + this.state.digits
+	}
+
+	/**
 	 * Returns the template for the formatted phone number.
 	 * @return {string}
 	 */
