@@ -884,13 +884,13 @@ describe('AsYouType', () => {
 	it('should return PhoneNumber with autocorrected international numbers without leading +', () => {
 		// https://github.com/catamphetamine/libphonenumber-js/issues/316
 		const formatter = new AsYouType('FR')
-		formatter.input('33612902554').should.equal('33612902554')
+		formatter.input('33612902554').should.equal('33 6 12 90 25 54')
 		formatter.getNumber().country.should.equal('FR')
 		formatter.getNumber().nationalNumber.should.equal('612902554')
 		formatter.getNumber().number.should.equal('+33612902554')
 		// Should also strip national prefix.
 		formatter.reset()
-		formatter.input('330612902554').should.equal('330612902554')
+		formatter.input('330612902554').should.equal('33 06 12 90 25 54')
 		formatter.getNumber().country.should.equal('FR')
 		formatter.getNumber().nationalNumber.should.equal('612902554')
 		formatter.getNumber().number.should.equal('+33612902554')
