@@ -1,4 +1,4 @@
-import { parseDigit } from './parseDigits'
+import { parseDigit } from './helpers/parseDigits'
 
 /**
  * Parses phone number characters from a string.

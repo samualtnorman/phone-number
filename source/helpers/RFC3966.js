@@ -6,19 +6,16 @@ import isViablePhoneNumber from './isViablePhoneNumber'
  * @param  {string} text - Phone URI (RFC 3966).
  * @return {object} `{ ?number, ?ext }`.
  */
-export function parseRFC3966(text)
-{
+export function parseRFC3966(text) {
 	let number
 	let ext
 
 	// Replace "tel:" with "tel=" for parsing convenience.
 	text = text.replace(/^tel:/, 'tel=')
 
-	for (const part of text.split(';'))
-	{
+	for (const part of text.split(';')) {
 		const [name, value] = part.split('=')
-		switch (name)
-		{
+		switch (name) {
 			case 'tel':
 				number = value
 				break
@@ -36,8 +33,7 @@ export function parseRFC3966(text)
 	}
 
 	// If the phone number is not viable, then abort.
-	if (!isViablePhoneNumber(number))
-	{
+	if (!isViablePhoneNumber(number)) {
 		return {}
 	}
 
@@ -52,15 +48,12 @@ export function parseRFC3966(text)
  * @param  {object} - `{ ?number, ?extension }`.
  * @return {string} Phone URI (RFC 3966).
  */
-export function formatRFC3966({ number, ext })
-{
-	if (!number)
-	{
+export function formatRFC3966({ number, ext }) {
+	if (!number) {
 		return ''
 	}
 
-	if (number[0] !== '+')
-	{
+	if (number[0] !== '+') {
 		throw new Error(`"formatRFC3966()" expects "number" to be in E.164 format.`)
 	}
 

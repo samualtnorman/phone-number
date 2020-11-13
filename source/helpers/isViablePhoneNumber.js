@@ -3,9 +3,9 @@ import {
 	VALID_DIGITS,
 	VALID_PUNCTUATION,
 	PLUS_CHARS
-} from './constants'
+} from '../constants'
 
-import { createExtensionPattern } from './extension'
+import createExtensionPattern from './extension/createExtensionPattern'
 
 //  Regular expression of viable phone numbers. This is location independent.
 //  Checks we have at least three leading digits, and only valid punctuation,
@@ -73,8 +73,7 @@ const VALID_PHONE_NUMBER_PATTERN = new RegExp(
 // that leading non-number symbols have been removed, such as by the method
 // `extract_possible_number`.
 //
-export default function isViablePhoneNumber(number)
-{
+export default function isViablePhoneNumber(number) {
 	return number.length >= MIN_LENGTH_FOR_NSN &&
 		VALID_PHONE_NUMBER_PATTERN.test(number)
 }

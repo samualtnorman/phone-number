@@ -1,4 +1,4 @@
-import { VALID_DIGITS } from './constants'
+import { VALID_DIGITS } from '../../constants'
 
 // The RFC 3966 format for extensions.
 const RFC3966_EXTN_PREFIX = ';ext='
@@ -17,7 +17,7 @@ const getExtensionDigitsPattern = (maxLength) => `([${VALID_DIGITS}]{1,${maxLeng
  * https://github.com/google/libphonenumber/blob/55b2646ec9393f4d3d6661b9c82ef9e258e8b829/javascript/i18n/phonenumbers/phonenumberutil.js#L759-L766
  * @return {string} RegEx pattern to capture extensions.
  */
-export function createExtensionPattern(purpose) {
+export default function createExtensionPattern(purpose) {
 	// We cap the maximum length of an extension based on the ambiguity of the way
 	// the extension is prefixed. As per ITU, the officially allowed length for
 	// extensions is actually 40, but we don't support this since we haven't seen real
@@ -109,51 +109,4 @@ export function createExtensionPattern(purpose) {
 	       + americanStyleExtnWithSuffix + "|"
 	       + autoDiallingExtn + "|"
 	       + onlyCommasExtn;
-}
-
-/**
- * Regexp of all possible ways to write extensions, for use when parsing. This
- * will be run as a case-insensitive regexp match. Wide character versions are
- * also provided after each ASCII version. There are three regular expressions
- * here. The first covers RFC 3966 format, where the extension is added using
- * ';ext='. The second more generic one starts with optional white space and
- * ends with an optional full stop (.), followed by zero or more spaces/tabs
- * /commas and then the numbers themselves. The other one covers the special
- * case of American numbers where the extension is written with a hash at the
- * end, such as '- 503#'. Note that the only capturing groups should be around
- * the digits that you want to capture as part of the extension, or else parsing
- * will fail! We allow two options for representing the accented o - the
- * character itself, and one in the unicode decomposed form with the combining
- * acute accent.
- */
-export const EXTN_PATTERNS_FOR_PARSING = createExtensionPattern('parsing')
-
-export const EXTN_PATTERNS_FOR_MATCHING = createExtensionPattern('matching')
-
-// Regexp of all known extension prefixes used by different regions followed by
-// 1 or more valid digits, for use when parsing.
-const EXTN_PATTERN = new RegExp('(?:' + createExtensionPattern() + ')$', 'i')
-
-// Strips any extension (as in, the part of the number dialled after the call is
-// connected, usually indicated with extn, ext, x or similar) from the end of
-// the number, and returns it.
-export function extractExtension(number) {
-	const start = number.search(EXTN_PATTERN)
-	if (start < 0) {
-		return {}
-	}
-	// If we find a potential extension, and the number preceding this is a viable
-	// number, we assume it is an extension.
-	const numberWithoutExtension = number.slice(0, start)
-	const matches = number.match(EXTN_PATTERN)
-	let i = 1
-	while (i < matches.length) {
-		if (matches[i]) {
-			return {
-				number: numberWithoutExtension,
-				ext: matches[i]
-			}
-		}
-		i++
-	}
 }

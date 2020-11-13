@@ -33,12 +33,12 @@ import getCountryCallingCodeCustom from './es6/getCountryCallingCode'
 import getCountriesCustom from './es6/getCountries'
 export { default as Metadata } from './es6/metadata'
 import { getExtPrefix as getExtPrefixCustom, isSupportedCountry as isSupportedCountryCustom } from './es6/metadata'
-import { parseRFC3966 as parseRFC3966Custom, formatRFC3966 as formatRFC3966Custom } from './es6/RFC3966'
+import { parseRFC3966 as parseRFC3966Custom, formatRFC3966 as formatRFC3966Custom } from './es6/helpers/RFC3966'
 import formatIncompletePhoneNumberCustom from './es6/formatIncompletePhoneNumber'
 export { default as parseIncompletePhoneNumber, parsePhoneNumberCharacter } from './es6/parseIncompletePhoneNumber'
 // Deprecated: remove DIGITS export in 2.0.0.
 // (it was used in `react-phone-number-input`)
-export { DIGITS, default as parseDigits } from './es6/parseDigits'
+export { DIGITS, default as parseDigits } from './es6/helpers/parseDigits'
 export { default as ParseError } from './es6/ParseError'
 
 export function parsePhoneNumberWithError()

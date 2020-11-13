@@ -21,6 +21,6 @@ export { default as getExampleNumber } from '../es6/getExampleNumber'
 
 export { default as formatIncompletePhoneNumber } from '../es6/formatIncompletePhoneNumber'
 export { default as parseIncompletePhoneNumber, parsePhoneNumberCharacter } from '../es6/parseIncompletePhoneNumber'
-export { default as parseDigits } from '../es6/parseDigits'
+export { default as parseDigits } from '../es6/helpers/parseDigits'
 
-export { parseRFC3966, formatRFC3966 } from '../es6/RFC3966'
+export { parseRFC3966, formatRFC3966 } from '../es6/helpers/RFC3966'

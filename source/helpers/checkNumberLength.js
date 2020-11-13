@@ -1,4 +1,4 @@
-import { mergeArrays } from './util'
+import mergeArrays from './mergeArrays'
 
 export default function checkNumberLength(nationalNumber, metadata) {
 	return checkNumberLengthForType(nationalNumber, undefined, metadata)

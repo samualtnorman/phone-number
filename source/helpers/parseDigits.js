@@ -4,8 +4,7 @@
 //
 // E.g. in Iraq they don't write `+442323234` but rather `+٤٤٢٣٢٣٢٣٤`.
 //
-export const DIGITS =
-{
+export const DIGITS = {
 	'0': '0',
 	'1': '1',
 	'2': '2',
@@ -48,8 +47,7 @@ export const DIGITS =
 	'\u06F9': '9'  // Eastern-Arabic digit 9
 }
 
-export function parseDigit(character)
-{
+export function parseDigit(character) {
 	return DIGITS[character]
 }
 

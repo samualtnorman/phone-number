@@ -1,5 +1,5 @@
-import metadata from '../metadata.full'
-import Metadata from './metadata'
+import metadata from '../../metadata.full'
+import Metadata from '../metadata'
 import { checkNumberLengthForType } from './checkNumberLength'
 
 describe('checkNumberLength', () => {

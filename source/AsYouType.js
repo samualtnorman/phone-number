@@ -3,7 +3,8 @@ import PhoneNumber from './PhoneNumber'
 import AsYouTypeState from './AsYouTypeState'
 import AsYouTypeFormatter, { DIGIT_PLACEHOLDER } from './AsYouTypeFormatter'
 import AsYouTypeParser, { extractFormattedDigitsAndPlus } from './AsYouTypeParser'
-import { findCountryCode } from './parse_'
+import getCountryByCallingCode from './helpers/getCountryByCallingCode'
+export { default as metadata } from '../metadata.min.json'
 
 const USE_NON_GEOGRAPHIC_COUNTRY_CODE = false
 
@@ -252,7 +253,7 @@ export default class AsYouType {
 	// entered so far based on the country phone code
 	// and the national phone number.
 	determineTheCountry() {
-		this.state.setCountry(findCountryCode(
+		this.state.setCountry(getCountryByCallingCode(
 			this.isInternational() ? this.state.callingCode : this.defaultCallingCode,
 			this.state.nationalSignificantNumber,
 			this.metadata
