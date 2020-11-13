@@ -4,7 +4,6 @@ import AsYouTypeState from './AsYouTypeState'
 import AsYouTypeFormatter, { DIGIT_PLACEHOLDER } from './AsYouTypeFormatter'
 import AsYouTypeParser, { extractFormattedDigitsAndPlus } from './AsYouTypeParser'
 import getCountryByCallingCode from './helpers/getCountryByCallingCode'
-export { default as metadata } from '../metadata.min.json'
 
 const USE_NON_GEOGRAPHIC_COUNTRY_CODE = false
 

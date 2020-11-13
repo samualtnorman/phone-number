@@ -52,10 +52,8 @@ export function formatRFC3966({ number, ext }) {
 	if (!number) {
 		return ''
 	}
-
 	if (number[0] !== '+') {
 		throw new Error(`"formatRFC3966()" expects "number" to be in E.164 format.`)
 	}
-
 	return `tel:${number}${ext ? ';ext=' + ext : ''}`
 }

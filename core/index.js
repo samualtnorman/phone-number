@@ -6,13 +6,17 @@ export { default as parsePhoneNumberWithError, default as parsePhoneNumber } fro
 // it has been promoted to a default export due to being too verbose.
 export { default as default, default as parsePhoneNumberFromString } from '../es6/parsePhoneNumberFromString'
 
+// Deprecated.
 export { default as findNumbers } from '../es6/findNumbers'
+// Deprecated.
 export { default as searchNumbers } from '../es6/searchNumbers'
+
 export { default as findPhoneNumbersInText } from '../es6/findPhoneNumbersInText'
 export { default as searchPhoneNumbersInText } from '../es6/searchPhoneNumbersInText'
 export { default as PhoneNumberMatcher } from '../es6/PhoneNumberMatcher'
 
 export { default as AsYouType } from '../es6/AsYouType'
+export { DIGIT_PLACEHOLDER } from '../es6/AsYouTypeFormatter'
 
 export { default as getCountries } from '../es6/getCountries'
 export { default as Metadata, isSupportedCountry, getCountryCallingCode, getExtPrefix } from '../es6/metadata'
