@@ -6,8 +6,8 @@ const countryCodes = Object.keys(metadata.countries)
 fs.writeFileSync(
 	'./types.d.ts',
 	fs.readFileSync('./types.d.ts', 'utf-8').replace(
-		/export type CountryCode = .*;\\n/,
-		`export type CountryCode = ${countryCodes.join(' | ')};\n`
+		/export type CountryCode = .*;/,
+		`export type CountryCode = ${countryCodes.map(_ => `'${_}'`).join(' | ')};`
 	),
 	'utf-8'
 )
