@@ -1,3 +1,9 @@
+<!--
+The exported `Metadata` name is already used for exporting the "raw" JSON metadata type.
+Then, `Metadata` class has become exported, but its name is already taken, so TypeScript users seem to be unable to use the `Metadata` class.
+If someone knows a solution then they could propose it in an issue.
+-->
+
 <!-- Maybe rename `metadata.full.json` -> `metadata.max.json`. -->
 
 <!-- (breaking change) Moved `findPhoneNumbersInText()` to its own subpackage: `libphonenumber-js/find`. The default export is `searchPhoneNumbersInText()` that returns an ES6 "iterator". -->
