@@ -285,9 +285,12 @@ export default class PhoneNumberMatcher
 
         // Java code does `groupMatcher.start(1)` here,
         // but there's no way in javascript to get a `candidate` start index,
-        // therefore using the overall match start index `candidateMatch.index`.
-        // (`groupMatcher` is called `candidateMatch` in this javascript port)
-        const match = this.parseAndVerify(candidate, offset + candidateMatch.index, text)
+        // therefore resort to using this kind of an approximation.
+        // (`groupMatcher` is called `candidateInSubstringMatch` in this javascript port)
+        // https://stackoverflow.com/questions/15934353/get-index-of-each-capture-in-a-javascript-regex
+        const candidateIndexGuess = substring.indexOf(candidate, candidateMatch.index)
+
+        const match = this.parseAndVerify(candidate, offset + candidateIndexGuess, text)
         if (match) {
           return match
         }
