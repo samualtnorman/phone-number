@@ -58,7 +58,7 @@
     "build:modules": "cross-env BABEL_ENV=es6 babel ./source --out-dir ./es6 --source-maps --ignore test.js",
     "build:bundle": "rollup --config rollup.config.js",
     "build": "npm-run-all clean build:commonjs build:modules build:bundle",
-    "prepublish": "npm run metadata:generate && npm run generate-country-codes && crlf --set=LF metadata.*.json && npm-run-all build test"
+    "prepublishOnly": "npm run metadata:generate && npm run generate-country-codes && crlf --set=LF metadata.*.json && npm-run-all build test"
   },
   "repository": {
     "type": "git",
