@@ -222,7 +222,19 @@ Sometimes (rarely) not all countries are needed, and in those cases developers m
 
 ### Country code
 
-"Country code" means either a [two-letter ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (like `US`). <!-- or a special `001` country code used for ["non-geographic entities"](#non-geographic) (as per [Google's libphonenumber library](https://github.com/googlei18n/libphonenumber/blob/0068d861a68d3d4612f7bf8646ab844dd3cefce5/java/libphonenumber/test/com/google/i18n/phonenumbers/RegionCode.java#L23-L24)). -->
+A "country code" is a [two-letter ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (like `US`). <!-- or a special `001` country code used for ["non-geographic entities"](#non-geographic) (as per [Google's libphonenumber library](https://github.com/googlei18n/libphonenumber/blob/0068d861a68d3d4612f7bf8646ab844dd3cefce5/java/libphonenumber/test/com/google/i18n/phonenumbers/RegionCode.java#L23-L24)). -->
+
+This library supports all [officially assigned](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements) ISO alpha-2 country codes, plus a few extra ones like: `AC` ([Ascension Island](https://en.wikipedia.org/wiki/Ascension_Island)), `TA` ([Tristan da Cunha](https://en.wikipedia.org/wiki/Tristan_da_Cunha)), `XK` ([Kosovo](https://en.wikipedia.org/wiki/Kosovo)).
+
+<!--
+var countries = []
+for (const code of Object.keys(country_calling_codes)) {
+  countries = countries.concat(country_calling_codes[code])
+}
+console.log(countries.length)
+-->
+
+To check whether a country code is supported, use [`isSupportedCountry()`](#issupportedcountrycountry-string-boolean) function.
 
 ### Non-geographic
 
@@ -269,7 +281,7 @@ Returns an instance of [`PhoneNumber`](#phonenumber) class, or `undefined` if no
 
 Available `options`:
 
-* `defaultCountry` — Default country for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
+* `defaultCountry` — Default [country](#country-code) for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
 
 * `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
@@ -473,7 +485,7 @@ Creates a formatter for a partially entered phone number.
 
 Available `options`:
 
-* `defaultCountry` — Default country for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
+* `defaultCountry` — Default [country](#country-code) for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
 
 * `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
@@ -592,7 +604,7 @@ Searches for phone numbers in `text`.
 
 Available `options`:
 
-* `defaultCountry` — Default country for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
+* `defaultCountry` — Default [country](#country-code) for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
 
 * `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
@@ -738,7 +750,7 @@ phoneNumber.formatNational() === '8 (912) 345-67-89'
 
 ### isSupportedCountry(country: string): boolean
 
-Checks if a country is supported by this library.
+Checks if a [country](#country-code) is supported by this library.
 
 ```js
 isSupportedCountry('RU') === true
@@ -766,7 +778,7 @@ getCountryCallingCode('IL') === '972'
 
 ### getExtPrefix(country: string): string
 
-Returns phone number extension prefix for a given `country`. If no custom ext prefix is defined for a `country` then the default `" ext. "` prefix is returned.
+Returns phone number extension prefix for a given [country](#country-code). If no custom ext prefix is defined for a `country` then the default `" ext. "` prefix is returned.
 
 ```js
 getExtPrefix('US') === ' ext. '
