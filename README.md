@@ -281,9 +281,11 @@ Returns an instance of [`PhoneNumber`](#phonenumber) class, or `undefined` if no
 
 Available `options`:
 
-* `defaultCountry` — Default [country](#country-code) for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
+* `defaultCountry: string` — Default [country](#country-code) for parsing national numbers. Instead of passing `options.defaultCountry` one could pass `defaultCountry` argument directly.
 
-* `defaultCallingCode` — Default calling code for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
+* `defaultCallingCode: string` — Default [calling code](#country-calling-code) for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
+
+* `extract: boolean` — Defines the "strictness" of parsing a phone number: by default, the function will attempt to extract a phone number from an input string (which mimicks the behavior of Google's `libphonenumber`), but, if a more "strict" input validation is required, one can pass `extract: false` option to prevent the function from extracting a phone number from an input string, and instead attempt to parse the entire input string as a phone number. For example, by default, when parsing `"Call: (213) 373-4253"` string, it will extract a `"(213) 373-4253"` phone number from it, but when parsing `"Call: (213) 373-4253"` string with `extract: false` option, it will return `undefined`, because the `"Call: "` part isn't skipped in this case, making the whole input string not a phone number.
 
 If a developer wants to know the exact reason why the phone number couldn't be parsed then they can use `parsePhoneNumberWithError()` function which throws the exact error:
 

@@ -52,7 +52,7 @@ export function parsePhoneNumberWithError(text: string, defaultCountry: CountryC
 // `parsePhoneNumberFromString()` named export is now considered legacy:
 // it has been promoted to a default export due to being too verbose.
 export function parsePhoneNumberFromString(text: string, metadata: Metadata): PhoneNumber;
-export function parsePhoneNumberFromString(text: string, defaultCountry: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string }, metadata: Metadata): PhoneNumber;
+export function parsePhoneNumberFromString(text: string, defaultCountry: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string, extract?: boolean }, metadata: Metadata): PhoneNumber;
 
 export default parsePhoneNumberFromString;
 
