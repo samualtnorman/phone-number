@@ -69,6 +69,9 @@ export function parsePhoneNumberFromString(text: string, defaultCountry?: Countr
 
 export default parsePhoneNumberFromString;
 
+export function isValidPhoneNumber(text: string, defaultCountry?: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string }): boolean;
+export function isPossiblePhoneNumber(text: string, defaultCountry?: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string }): boolean;
+
 // `parse()` and `parseCustom` are deprecated.
 // Use `fparseNumber()` and `parseNumberCustom()` instead.
 export function parse(text: string, options?: CountryCode | ParseNumberOptions): ParsedNumber;

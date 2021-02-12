@@ -76,6 +76,8 @@ And edit the README:
 
 * [Added](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/29) `extract: false` option on `parsePhoneNumberFromString()`: it enables a bit "stricter" parsing in a way that it attempts to parse the entire text as a phone number rather than extracting a phone number from text. For example, with `extract: false` option, `"(213) 373-4253"` is parsed as a valid phone number, but `"Call: (213) 373-4253"` is not, because the `"Call: "` part doesn't automatically get trimmed in this case. If there's version `2.x`, I guess `extract: false` will be the default behavior because it looks more appropriate than the default "extract" behavior of Google's `libphonenumber`.
 
+* Added `isPossiblePhoneNumber()` and `isValidPhoneNumber()` functions, which are basically shortucts to `parsePhoneNumberFromString(text, { extract: false })` and then `.isValid()`/`.isPossible()`.
+
 1.9.5 / 01.12.2020
 ==================
 

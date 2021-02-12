@@ -110,6 +110,17 @@ parseNumber('Phone: 8 (800) 555 35 35.', 'RU')
 </details>
 -->
 
+### Validate phone number
+
+```js
+import { isPossiblePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js'
+
+isPossiblePhoneNumber('8 (800) 555-35-35', 'RU') === true
+isValidPhoneNumber('8 (800) 555-35-35', 'RU') === true
+```
+
+`isPossiblePhoneNumber()` only validates phone number length, while `isValidPhoneNumber()` validates both phone number length and the actual phone number digits.
+
 ### Format phone number
 
 <!--
@@ -285,7 +296,7 @@ Available `options`:
 
 * `defaultCallingCode: string` — Default [calling code](#country-calling-code) for parsing national numbers. Some numbering plans are for ["non-geographic numbering plans"](#non-geographic) and they don't have a country code, so `defaultCountry` can't be specified for them.
 
-* `extract: boolean` — Defines the "strictness" of parsing a phone number: by default, the function will attempt to extract a phone number from an input string (which mimicks the behavior of Google's `libphonenumber`), but, if a more "strict" input validation is required, one can pass `extract: false` option to prevent the function from extracting a phone number from an input string, and instead attempt to parse the entire input string as a phone number. For example, by default, when parsing `"Call: (213) 373-4253"` string, it will extract a `"(213) 373-4253"` phone number from it, but when parsing `"Call: (213) 373-4253"` string with `extract: false` option, it will return `undefined`, because the `"Call: "` part isn't skipped in this case, making the whole input string not a phone number.
+* `extract: boolean` — Defines the ["strictness"](#strictness) of parsing a phone number.
 
 If a developer wants to know the exact reason why the phone number couldn't be parsed then they can use `parsePhoneNumberWithError()` function which throws the exact error:
 
@@ -315,6 +326,22 @@ try {
 
 * `TOO_SHORT` — When national (significant) number is too short (for ex. 1 digit).
 </details>
+
+#### Strictness
+
+By default, the parsing function will attempt to extract a phone number from an input string even in cases like `"Support: (213) 373-4253 (robot)"`, which mimicks the behavior of the original Google's `libphonenumber` library, and is the default behavior for legacy reasons. However, if "strict" input validation is required, one can pass `extract: false` flag to demand that the whole input string be a viable phone number.
+
+```js
+parsePhoneNumber('Call: (213) 373-4253', 'US') === PhoneNumber
+
+// When parsing the same string with `extract: false` flag,
+// it will return `undefined`, because a phone number can't
+// contain letters or a colon.
+parsePhoneNumber('Call: (213) 373-4253', {
+  defaultCountry: 'US',
+  extract: false
+}) === undefined
+```
 
 ### `PhoneNumber`
 
@@ -374,7 +401,7 @@ phoneNumber.getURI() === phoneNumber.format("RFC3966")
 
 #### `isPossible(): boolean`
 
-Checks if the phone number is "possible". Only checks the phone number length, doesn't check the number digits against any regular expressions.
+Checks if the phone number is "possible". Only checks the phone number length, doesn't check the actual phone number digits against any regular expressions.
 
 #### `isValid(): boolean`
 
@@ -411,7 +438,7 @@ parseMobile('+6589555555').isValid() === false
 
 ####
 
-See also ["Using phone number validation feature"](#using-phone-number-validation-feature) considerations.
+See ["Using phone number validation feature"](#using-phone-number-validation-feature) for choosing between `isPossible()` and `isValid()`.
 
 <!--
 #### `isValidForRegion(country)`
@@ -480,6 +507,28 @@ Returns `true` if the number belongs to a ["non-geographic numbering plan"](#non
 #### `isEqual(phoneNumber: PhoneNumber): boolean`
 
 Compares two `PhoneNumber`s: returns `true` if they're equal, `false` otherwise.
+
+### `isPossiblePhoneNumber(input: string): boolean`
+
+Checks if `input` can be parsed as a "possible" phone number. A phone number is "possible" when it has valid length. The actual phone number digits aren't validated.
+
+```js
+isPossiblePhoneNumber('8 (888) 888-88-88', 'RU') === true
+isPossiblePhoneNumber('+12223334444') === true
+```
+
+This function is just a shortcut for a two-step process of ["strictly"](#strictness) parsing a phone number and then calling `.isPossible()`.
+
+### `isValidPhoneNumber(input: string): boolean`
+
+Checks if `input` can be parsed as a "valid" phone number. A phone number is "valid" when it has valid length, and the actual phone number digits match the regular expressions for that country.
+
+```js
+isValidPhoneNumber('8 (800) 555-35-35', 'RU') === true
+isValidPhoneNumber('+12133734253') === true
+```
+
+This function is just a shortcut for a two-step process of ["strictly"](#strictness) parsing a phone number and then calling `.isValid()`.
 
 ### `class` AsYouType([options or defaultCountry])
 
@@ -1129,21 +1178,9 @@ isValidNumberForRegion('07624369230', 'IM') === true
 
 ## Using phone number validation feature
 
-I personally don't use strict phone number validation in my projects because telephone numbering plans sometimes change and so validation rules can change too which means that [`PhoneNumber.isValid()`](#isvalid) function may become outdated if a website isn't re-deployed regularly. For example:
+I personally don't use strict phone number validation in my projects. The rationale is that telephone numbering plans can and sometimes do change, meaning that [`PhoneNumber.isValid()`](#isvalid) function may one day become outdated on a website that isn't actively maintained anymore. Imagine a "promo-site" or a "personal website" being deployed once and then running for years without any maintenance, where a client may be unable to submit a simple "Contact Us" form just because this newly allocated pool of mobile phone numbers wasn't present in that old version of `libphonenumber-js` bundled in it.
 
-* New phone number rules can be added to Google's `libphonenumber` library after they have already been implemented in real life (which can introduce a delay).
-
-<!--
-* Then those new rules from Google's `libphonenumber` are updated automatically in this library (the scheduled update script introduces a small delay of 1 day, unless it malfunctions).
--->
-
-* After that those new rules from Google's `libphonenumber` are merged in this library (another delay).
-
-* And then there's still the web application itself using this library and until a developer installs `libphonenumber-js@latest` manually and rebuilds and redeploys the web application, it's gonna use the old (potentially outdated) phone number validation rules which could result in losing rare customers with newly valid (but previously non-valid) phone numbers if a website form is too strict about validating user's input.
-
-Phone number validation rules are [being updated regularly](https://github.com/googlei18n/libphonenumber/commits/master/resources/PhoneNumberMetadata.xml) in Google's repo. Imagine a web application (for example, a "promo-site" or a "personal website") with a "Contact Us" form being deployed once and then running for years without any maintenance.
-
-If it was required to validate a phone number being input by a user, then I'd personally use something like [`PhoneNumber.isPossible()`](#ispossible) that just validates phone number length.
+Whenever there's a "business requirement" to validate a phone number that's being input by a user, I prefer using [`PhoneNumber.isPossible()`](#ispossible) instead of [`PhoneNumber.isValid()`](#isvalid), so that it just validates the phone number length, and doesn't validate the actual phone number digits. But it doesn't mean that you shouldn't use [`PhoneNumber.isValid()`](#isvalid) — maybe in your case it would make sense.
 
 ## React
 

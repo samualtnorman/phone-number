@@ -46,6 +46,12 @@ export function parsePhoneNumberFromString(text: string, defaultCountry: Country
 
 export default parsePhoneNumberFromString;
 
+export function isValidPhoneNumber(text: string, metadata: Metadata): boolean;
+export function isValidPhoneNumber(text: string, defaultCountry: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string }, metadata: Metadata): boolean;
+
+export function isPossiblePhoneNumber(text: string, metadata: Metadata): boolean;
+export function isPossiblePhoneNumber(text: string, defaultCountry: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string }, metadata: Metadata): boolean;
+
 export function findNumbers(text: string, metadata: Metadata): NumberFoundLegacy[];
 export function findNumbers(text: string, options: CountryCode | { defaultCountry?: CountryCode, v2: true }, metadata: Metadata): NumberFound[];
 
