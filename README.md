@@ -514,7 +514,7 @@ Checks if `input` can be parsed as a "possible" phone number. A phone number is 
 
 ```js
 isPossiblePhoneNumber('8 (888) 888-88-88', 'RU') === true
-isPossiblePhoneNumber('+12223334444') === true
+isPossiblePhoneNumber('+12223333333') === true
 ```
 
 This function is just a shortcut for a two-step process of ["strictly"](#strictness) parsing a phone number and then calling `.isPossible()`.
@@ -524,7 +524,9 @@ This function is just a shortcut for a two-step process of ["strictly"](#strictn
 Checks if `input` can be parsed as a "valid" phone number. A phone number is "valid" when it has valid length, and the actual phone number digits match the regular expressions for that country.
 
 ```js
+isValidPhoneNumber('8 (888) 888-88-88', 'RU') === false
 isValidPhoneNumber('8 (800) 555-35-35', 'RU') === true
+isValidPhoneNumber('+12223333333') === false
 isValidPhoneNumber('+12133734253') === true
 ```
 
