@@ -530,6 +530,8 @@ isValidPhoneNumber('+12133734253') === true
 
 This function is just a shortcut for a two-step process of ["strictly"](#strictness) parsing a phone number and then calling `.isValid()`.
 
+See ["Using phone number validation feature"](#using-phone-number-validation-feature) for choosing between `isPossible()` and `isValid()`.
+
 ### `class` AsYouType([options or defaultCountry])
 
 Creates a formatter for a partially entered phone number.
