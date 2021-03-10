@@ -600,9 +600,9 @@ asYouType.getTemplate() === 'xx xxx xxx xxxx'
 
  * `isInternational(): boolean` — Returns `true` if the phone number is being input in international format. In other words, returns `true` if and only if the parsed phone number starts with a `"+"`.
 
- * `getCallingCode(): string` — Returns the ["country calling code"](#country-calling-code) part of the phone number. Returns `undefined` if the number is not being input in international format. Returns "country calling code" for ["non-geographic"](#non-geographic) phone numbering plans too.
+ * `getCallingCode(): string?` — Returns the ["country calling code"](#country-calling-code) part of the phone number. Returns `undefined` if the number is not being input in international format. Returns "country calling code" for ["non-geographic"](#non-geographic) phone numbering plans too.
 
- * `getCountry(): string` — Returns a two-letter [country code](#country-code) of the phone number. Returns `undefined` for ["non-geographic"](#non-geographic) phone numbering plans. Returns `undefined` if no phone number has been input yet.
+ * `getCountry(): string?` — Returns a two-letter [country code](#country-code) of the phone number. Returns `undefined` for ["non-geographic"](#non-geographic) phone numbering plans. Returns `undefined` if no phone number has been input yet.
 
  * `isPossible(): boolean` — Returns `true` if the phone number is "possible". Is just a shortcut for [`PhoneNumber.isPossible()`](#ispossible-boolean).
 

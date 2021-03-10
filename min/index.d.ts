@@ -80,6 +80,11 @@ export class AsYouType {
   getNumber(): PhoneNumber | undefined;
   getChars(): string;
   getTemplate(): string;
+  getCallingCode(): string | undefined;
+  getCountry(): CountryCode | undefined;
+  isInternational(): boolean;
+  isPossible(): boolean;
+  isValid(): boolean;
 }
 
 // The exported `Metadata` name is already used for exporting the "raw" JSON metadata type.
