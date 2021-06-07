@@ -1502,7 +1502,13 @@ Google periodically releases new metadata with the changes described in the [rel
 
 Metadata update process is automated through an "autoupdate" script: see `autoupdate.cmd` (Windows) or `autoupdate.sh` (Linux/macOS). The script detects changes to `PhoneNumberMetadata.xml` in Google `libphonenumber`'s repo and if there are changes then it pulls the latest metadata, processes it, commits the changes to GitHub, builds a new version of the library and releases it to NPM. So this library's metadata is supposed to be up-to-date. I could set up this script to run automatically but on my Windows machine `ssh-agent` doesn't work properly so I run the "autoupdate" script manually from time to time.
 
-Also Google sometimes (very rarely) updates their code: [`phonenumberutil.js`](https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/phonenumberutil.js) (`parseNumber()`, `formatNumber()`, `isValidNumber()`, `getNumberType()`), [`AsYouTypeFormatter.java`](https://github.com/google/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/AsYouTypeFormatter.java) (`AsYouType`), [`PhoneNumberMatcher`](https://github.com/googlei18n/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberMatcher.java) (`findPhoneNumbersInText()`). The latest sync-up was performed on Jan 28th, 2021.
+Also Google sometimes (very rarely) updates their code:
+
+* [`phonenumberutil.js`](https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/phonenumberutil.js) — `parseNumber()`, `formatNumber()`, `isValidNumber()`, `getNumberType()`
+* [`AsYouTypeFormatter.java`](https://github.com/google/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/AsYouTypeFormatter.java) — `AsYouType`
+* [`PhoneNumberMatcher.java`](https://github.com/googlei18n/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberMatcher.java) — `findPhoneNumbersInText()`
+
+The latest sync-up was on June 7th, 2021.
 
 ## Contributing
 
