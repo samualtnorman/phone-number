@@ -1558,4 +1558,9 @@ If you're looking for an international "2 days ago" javascript solution then che
 
 ## License
 
-[MIT](LICENSE)
+Google's `libphonenumber` is [licensed](https://github.com/google/libphonenumber/blob/master/LICENSE) under Apache 2.
+
+[Apache 2](https://en.wikipedia.org/wiki/Apache_License#Licensing_conditions) does not require a derivative work of the software, or modifications to the original, to be distributed using the same license. Hence, this library is licensed under [MIT](LICENSE), which is [compatible](https://www.quora.com/Is-the-MIT-license-compatible-with-the-Apache-License-Version-2-APLv2) with Apache 2.
+
+The Apache license is terminated if the user sues anyone over patent infringement related to the software covered by the license. This condition is added in order to prevent patent litigations.
+
