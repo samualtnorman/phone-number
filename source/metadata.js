@@ -68,7 +68,7 @@ export default class Metadata {
 		}
 	}
 
-	// This is a documented public API method.
+	// Deprecated.
 	country(countryCode) {
 		return this.selectNumberingPlan(countryCode)
 	}
@@ -145,12 +145,12 @@ export default class Metadata {
 		return this.numberingPlan.callingCode()
 	}
 
-	// This is a documented public API method.
+	// Deprecated.
 	IDDPrefix() {
 		return this.numberingPlan.IDDPrefix()
 	}
 
-	// This is a documented public API method.
+	// Deprecated.
 	defaultIDDPrefix() {
 		return this.numberingPlan.defaultIDDPrefix()
 	}
@@ -160,7 +160,7 @@ export default class Metadata {
 		return this.numberingPlan.nationalNumberPattern()
 	}
 
-	// This is a documented public API method.
+	// Deprecated.
 	possibleLengths() {
 		return this.numberingPlan.possibleLengths()
 	}
@@ -180,7 +180,7 @@ export default class Metadata {
 		return this.numberingPlan.nationalPrefixTransformRule()
 	}
 
-	// This is a documented public API method.
+	// Deprecated.
 	leadingDigits() {
 		return this.numberingPlan.leadingDigits()
 	}

@@ -1357,7 +1357,45 @@ Metadata is generated from Google's [`PhoneNumberMetadata.xml`](https://github.c
 
 Metadata can be accessed programmatically by using the exported `Metadata` class.
 
-First, create a `Metadata` instance from JSON metadata:
+First, create a `Metadata` class instance:
+
+```js
+import { Metadata } from 'libphonenumber-js'
+
+const metadata = new Metadata()
+```
+
+Then, select a ["numbering plan"](https://en.wikipedia.org/wiki/Telephone_numbering_plan) (a country):
+
+```js
+metadata.selectNumberingPlan('US')
+```
+
+After that, the following methods of `metadata.numberingPlan` can be called:
+
+* `leadingDigits(): string?` — Returns ["leading digits"](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#leading_digits) pattern.
+
+* `possibleLengths(): number[]` — Returns a list of [possible lengths](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#possible_lengths) of a national (significant) number.
+
+* `IDDPrefix(): string` — Returns an [International Direct Dialing](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#idd_prefix) prefix.
+
+* `defaultIDDPrefix(): string?` — Returns a [default International Direct Dialing](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#default_idd_prefix) prefix when there're multiple ones available.
+
+Example:
+
+```js
+import { Metadata } from 'libphonenumber-js'
+
+const metadata = new Metadata()
+metadata.selectNumberingPlan('US')
+
+metadata.numberingPlan.leadingDigits() === undefined
+metadata.numberingPlan.possibleLengths() === [10]
+metadata.numberingPlan.IDDPrefix() === '011'
+metadata.numberingPlan.defaultIDDPrefix() === undefined
+```
+
+Using with custom metadata:
 
 ```js
 import { Metadata } from 'libphonenumber-js/core'
@@ -1369,23 +1407,7 @@ import min from 'libphonenumber-js/metadata.min.json'
 const metadata = new Metadata(min)
 ```
 
-Then, select a country:
-
-```js
-metadata.country('US')
-```
-
-Available `metadata` instance methods:
-
-* `leadingDigits(): string?` — Returns ["leading digits"](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#leading_digits) pattern.
-
-* `possibleLengths(): number[]` — Returns a list of [possible lengths](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#possible_lengths) of a national (significant) number.
-
-* `IDDPrefix(): string` — Returns an [International Direct Dialing](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#idd_prefix) prefix.
-
-* `defaultIDDPrefix(): string?` — Returns a [default International Direct Dialing](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#default_idd_prefix) prefix when there're multiple ones available.
-
-As one can see, the [`Metadata` class](https://gitlab.com/catamphetamine/libphonenumber-js/-/blob/master/source/metadata.js) is not documented much. Partially, that's because its usage is not necessarily encouraged, but it's still used, for example, in [`react-phone-number-input`](https://gitlab.com/catamphetamine/react-phone-number-input/-/blob/master/source/helpers/phoneInputHelpers.js) to get "leading digits" for a country, or to get maximum phone number length for a country.
+As one can see, the [`Metadata` class](https://gitlab.com/catamphetamine/libphonenumber-js/-/blob/master/source/metadata.js) is not documented much. Partially, that's because its usage is not necessarily encouraged, but it's still used, for example, in [`react-phone-number-input`](https://gitlab.com/catamphetamine/react-phone-number-input/-/blob/master/source/helpers/phoneInputHelpers.js) to get "leading digits" for a country, or to get maximum phone number length for a country. Stick to the methods documented above, don't call any other methods. If you think there's a need to call any other methods, create a discussion issue.
 
 <!--
 Currently I have a script set up monitoring changes to `PhoneNumberMetadata.xml` in Google's repo and automatically releasing new versions of this library when metadata in Google's repo gets updated. So this library's metadata is supposed to be up-to-date. Still, in case the automatic metadata update script malfunctions some day, anyone can request metadata update via a Pull Request here on GitHub:
