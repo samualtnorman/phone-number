@@ -1317,6 +1317,10 @@ When reporting `findPhoneNumbersInText()` bugs one should know that `findPhoneNu
 
 [TypeScript support](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/index.d.ts) for this library is entirely community-driven. I myself don't use TypeScript. Send your pull requests.
 
+<!--
+https://codesandbox.io/s/damp-fast-26c7z?file=/src/index.ts
+-->
+
 ## CDN
 
 One can use any npm CDN service, e.g. [unpkg.com](https://unpkg.com) or [jsdelivr.com](https://jsdelivr.com)
