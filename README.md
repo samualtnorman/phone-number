@@ -342,17 +342,17 @@ Such phone numbering plans are called "non-geographic", and their phone numbers 
 
 ## API
 
-### parsePhoneNumberFromString(string, [options or defaultCountry]): PhoneNumber
+### parsePhoneNumber(string, [options or defaultCountry]): PhoneNumber
 
 Parses a phone number from `string`.
 
-Can be imported both as a "default" export and as a "named" export.
+Can be imported both as a "default" export and as a "named" export `parsePhoneNumberFromString`.
 
 ```js
-import parsePhoneNumberFromString from 'libphonenumber-js'
-// Or: import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import parsePhoneNumber from 'libphonenumber-js'
+// Or: import { parsePhoneNumberFromString as parsePhoneNumber } from 'libphonenumber-js'
 
-const phoneNumber = parsePhoneNumberFromString('(213) 373-42-53 ext. 1234', 'US')
+const phoneNumber = parsePhoneNumber('(213) 373-42-53 ext. 1234', 'US')
 if (phoneNumber) {
   console.log(phoneNumber.formatNational())
 }
@@ -1444,8 +1444,7 @@ Pass the `metadata` argument as the last one to the "core" functions.
 In ES6 that would be:
 
 ```js
-import {
-  parsePhoneNumberFromString as _parsePhoneNumberFromString,
+import _parsePhoneNumber, {
   findPhoneNumbersInText as _findPhoneNumbersInText,
   AsYouType as _AsYouType
 } from 'libphonenumber-js/core'
@@ -1458,8 +1457,8 @@ function call(func, _arguments) {
   return func.apply(this, args)
 }
 
-export default function parsePhoneNumberFromString() {
-  return call(_parsePhoneNumberFromString, arguments)
+export default function parsePhoneNumber() {
+  return call(_parsePhoneNumber, arguments)
 }
 
 export function findPhoneNumbersInText() {
@@ -1485,12 +1484,12 @@ function call(func, _arguments) {
   return func.apply(this, args)
 }
 
-function parsePhoneNumberFromString() {
-  return call(core.parsePhoneNumberFromString, arguments)
+function parsePhoneNumber() {
+  return call(core.default, arguments)
 }
 
-exports = module.exports = parsePhoneNumberFromString
-exports['default'] = parsePhoneNumberFromString
+exports = module.exports = parsePhoneNumber
+exports['default'] = parsePhoneNumber
 
 exports.findPhoneNumbersInText = function findPhoneNumbersInText() {
   return call(core.findPhoneNumbersInText, arguments)
