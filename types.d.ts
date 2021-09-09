@@ -23,7 +23,7 @@ export type Countries = {
   [country in CountryCode]: any[];
 };
 
-export type Metadata = {
+export type MetadataJson = {
   country_calling_codes: CountryCallingCodes;
   countries: Countries;
 };
@@ -40,7 +40,7 @@ export interface Extension extends String { }
 export interface CarrierCode extends String { }
 export interface CountryCallingCode extends String { }
 
-type FormatExtension = (formattedNumber: string, extension: Extension, metadata: Metadata) => string
+type FormatExtension = (formattedNumber: string, extension: Extension, metadata: MetadataJson) => string
 
 type FormatNumberOptionsWithoutIDD = {
   v2?: boolean;
@@ -56,7 +56,7 @@ type FormatNumberOptions = {
 };
 
 export class PhoneNumber {
-  constructor(countryCallingCodeOrCountry: CountryCallingCode | CountryCode, nationalNumber: NationalNumber, metadata: Metadata);
+  constructor(countryCallingCodeOrCountry: CountryCallingCode | CountryCode, nationalNumber: NationalNumber, metadata: MetadataJson);
   countryCallingCode: CountryCallingCode;
   country?: CountryCode;
   nationalNumber: NationalNumber;
@@ -90,6 +90,13 @@ export interface NumberFoundLegacy {
 
 export class ParseError {
   message: string;
+}
+
+export interface NumberingPlan {
+  leadingDigits(): string | undefined;
+  possibleLengths(): number[];
+  IDDPrefix(): string;
+  defaultIDDPrefix(): string | undefined;
 }
 
 // The rationale for having a separate type for the result "enum" instead of just a `string`:

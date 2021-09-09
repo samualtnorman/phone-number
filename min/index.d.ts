@@ -1,5 +1,5 @@
 import {
-  Metadata,
+  MetadataJson,
   PhoneNumber,
   E164Number,
   CountryCallingCode,
@@ -12,13 +12,14 @@ import {
   NumberFound,
   NumberType,
   NumberFormat,
+  NumberingPlan,
   ValidatePhoneNumberLengthResult
 } from '../types';
 
 // They say this re-export is required.
 // https://github.com/catamphetamine/libphonenumber-js/pull/290#issuecomment-453281180
 export {
-  Metadata,
+  MetadataJson,
   PhoneNumber,
   E164Number,
   CountryCallingCode,
@@ -31,6 +32,7 @@ export {
   NumberFound,
   NumberType,
   NumberFormat,
+  NumberingPlan,
   ValidatePhoneNumberLengthResult
 };
 
@@ -90,9 +92,13 @@ export class AsYouType {
   isValid(): boolean;
 }
 
-// The exported `Metadata` name is already used for exporting the "raw" JSON metadata type.
-// Then, `Metadata` class has become exported, but its name is already taken, so TypeScript users seem to be unable to use the `Metadata` class.
-// If someone knows a solution then they could propose it in an issue.
-// export class Metadata {
-//   ...
-// }
+export class Metadata {
+  constructor(metadata: MetadataJson);
+  selectNumberingPlan(country: CountryCode): void;
+  // The `numberingPlan` property is declared without a `?`
+  // just so that TypeScript programmers don't have to add
+  // a needless `if (metadata.numberingPlan)` check:
+  // the `numberingPlan` property is only set after
+  // `selectNumberingPlan(country)` method has been called.
+  numberingPlan: NumberingPlan;
+}
