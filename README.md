@@ -1357,21 +1357,35 @@ Metadata is generated from Google's [`PhoneNumberMetadata.xml`](https://github.c
 
 Metadata can be accessed programmatically by using the exported `Metadata` class.
 
+First, create a `Metadata` instance from JSON metadata:
+
 ```js
 import { Metadata } from 'libphonenumber-js/core'
-import minMetadata from 'libphonenumber-js/metadata.min'
 
-const metadata = new Metadata(minMetadata)
-// Select a country.
-metadata.country('US')
+import min from 'libphonenumber-js/metadata.min.json'
+// import max from 'libphonenumber-js/metadata.full.json'
+// import mobile from 'libphonenumber-js/metadata.mobile.json'
 
-console.log(metadata.numberingPlan.leadingDigits())
-console.log(metadata.numberingPlan.possibleLengths())
-console.log(metadata.numberingPlan.IDDPrefix())
-console.log(metadata.numberingPlan.defaultIDDPrefix())
+const metadata = new Metadata(min)
 ```
 
-As one can see, the [`Metadata` class](https://gitlab.com/catamphetamine/libphonenumber-js/-/blob/master/source/metadata.js) is not documented much. Partially, that's because its usage is not encouraged, but it's still used, for example, in [`react-phone-number-input`](https://gitlab.com/catamphetamine/react-phone-number-input/-/blob/master/source/phoneInputHelpers.js) to get "leading digits" for a country, or to get maximum phone number length for a country.
+Then, select a country:
+
+```js
+metadata.country('US')
+```
+
+Available `metadata` instance methods:
+
+* `leadingDigits(): string?` — Returns ["leading digits"](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#leading_digits) pattern.
+
+* `possibleLengths(): number[]` — Returns a list of [possible lengths](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#possible_lengths) of a national (significant) number.
+
+* `IDDPrefix(): string` — Returns an [International Direct Dialing](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#idd_prefix) prefix.
+
+* `defaultIDDPrefix(): string?` — Returns a [default International Direct Dialing](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/METADATA.md#default_idd_prefix) prefix when there're multiple ones available.
+
+As one can see, the [`Metadata` class](https://gitlab.com/catamphetamine/libphonenumber-js/-/blob/master/source/metadata.js) is not documented much. Partially, that's because its usage is not necessarily encouraged, but it's still used, for example, in [`react-phone-number-input`](https://gitlab.com/catamphetamine/react-phone-number-input/-/blob/master/source/helpers/phoneInputHelpers.js) to get "leading digits" for a country, or to get maximum phone number length for a country.
 
 <!--
 Currently I have a script set up monitoring changes to `PhoneNumberMetadata.xml` in Google's repo and automatically releasing new versions of this library when metadata in Google's repo gets updated. So this library's metadata is supposed to be up-to-date. Still, in case the automatic metadata update script malfunctions some day, anyone can request metadata update via a Pull Request here on GitHub:
