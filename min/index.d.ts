@@ -93,7 +93,7 @@ export class AsYouType {
 }
 
 export class Metadata {
-  constructor(metadata: MetadataJson);
+  constructor();
   selectNumberingPlan(country: CountryCode): void;
   // The `numberingPlan` property is declared without a `?`
   // just so that TypeScript programmers don't have to add

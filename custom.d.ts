@@ -14,7 +14,8 @@ import {
   NumberFoundLegacy,
   NumberFound,
   NumberType,
-  NumberFormat
+  NumberFormat,
+  NumberingPlan
 } from './types';
 
 import {
@@ -39,7 +40,8 @@ export {
   NumberFoundLegacy,
   NumberFound,
   NumberFormat,
-  NumberType
+  NumberType,
+  NumberingPlan
 };
 
 // `parsePhoneNumber()` named export has been renamed to `parsePhoneNumberWithError()`.
@@ -155,4 +157,15 @@ export class AsYouType {
   isInternational(): boolean;
   isPossible(): boolean;
   isValid(): boolean;
+}
+
+export class Metadata {
+  constructor(metadata: MetadataJson);
+  selectNumberingPlan(country: CountryCode): void;
+  // The `numberingPlan` property is declared without a `?`
+  // just so that TypeScript programmers don't have to add
+  // a needless `if (metadata.numberingPlan)` check:
+  // the `numberingPlan` property is only set after
+  // `selectNumberingPlan(country)` method has been called.
+  numberingPlan: NumberingPlan;
 }
