@@ -32,6 +32,13 @@ export type MetadataJson = {
   countries: Countries;
 };
 
+export interface Examples {
+  // `in` operator docs:
+  // https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
+  // `country in CountryCode` means "for each and every CountryCode".
+  [country in CountryCode]: NationalNumber;
+};
+
 // 'National' and 'International' formats are deprecated.
 export type NumberFormat = 'NATIONAL' | 'National' | 'INTERNATIONAL' | 'International' | 'E.164' | 'RFC3966' | 'IDD';
 export type NumberType = undefined | 'PREMIUM_RATE' | 'TOLL_FREE' | 'SHARED_COST' | 'VOIP' | 'PERSONAL_NUMBER' | 'PAGER' | 'UAN' | 'VOICEMAIL' | 'FIXED_LINE_OR_MOBILE' | 'FIXED_LINE' | 'MOBILE';

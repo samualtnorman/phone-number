@@ -1,5 +1,6 @@
 import {
   MetadataJson,
+  Examples,
   PhoneNumber,
   E164Number,
   CountryCallingCode,
@@ -20,6 +21,7 @@ import {
 // https://github.com/catamphetamine/libphonenumber-js/pull/290#issuecomment-453281180
 export {
   MetadataJson,
+  Examples,
   PhoneNumber,
   E164Number,
   CountryCallingCode,
@@ -71,7 +73,7 @@ export function getCountries(): CountryCode[];
 export function getCountryCallingCode(countryCode: CountryCode): CountryCallingCode;
 export function getExtPrefix(countryCode: CountryCode): string;
 
-export function getExampleNumber(country: CountryCode, examples: { [country in CountryCode]: NationalNumber }): PhoneNumber | undefined;
+export function getExampleNumber(country: CountryCode, examples: Examples): PhoneNumber | undefined;
 
 export function formatIncompletePhoneNumber(number: string, countryCode?: CountryCode): string;
 export function parseIncompletePhoneNumber(text: string): string;

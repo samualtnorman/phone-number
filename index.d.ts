@@ -1,5 +1,6 @@
 import {
   MetadataJson,
+  Examples,
   PhoneNumber,
   E164Number,
   CountryCallingCode,
@@ -18,6 +19,7 @@ import {
 
 export {
   MetadataJson,
+  Examples,
   PhoneNumber,
   E164Number,
   CountryCallingCode,
@@ -96,7 +98,7 @@ export function formatNumber(phone: NationalNumber, country: CountryCode, format
 export function getNumberType(parsedNumber: ParsedNumber): NumberType;
 export function getNumberType(phone: NationalNumber, country?: CountryCode): NumberType;
 
-export function getExampleNumber(country: CountryCode, examples: { [country in CountryCode]: NationalNumber }): PhoneNumber | undefined;
+export function getExampleNumber(country: CountryCode, examples: Examples): PhoneNumber | undefined;
 
 export function isPossibleNumber(parsedNumber: ParsedNumber): boolean;
 export function isPossibleNumber(phone: NationalNumber, country?: CountryCode): boolean;
