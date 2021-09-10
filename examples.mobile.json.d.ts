@@ -1,3 +1,4 @@
 import { Examples } from './types';
 
-export default Examples;
+declare const examples: Examples;
+export default examples;
