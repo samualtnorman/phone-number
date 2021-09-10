@@ -32,7 +32,7 @@ export type MetadataJson = {
   countries: Countries;
 };
 
-export interface Examples {
+export type Examples = {
   // `in` operator docs:
   // https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
   // `country in CountryCode` means "for each and every CountryCode".
