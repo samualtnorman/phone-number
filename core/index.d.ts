@@ -85,7 +85,7 @@ export function getCountries(metadata: MetadataJson): CountryCode[];
 export function getCountryCallingCode(countryCode: CountryCode, metadata: MetadataJson): CountryCallingCode;
 export function getExtPrefix(countryCode: CountryCode, metadata: MetadataJson): string;
 
-export function getExampleNumber(country: CountryCode, examples: Examples }, metadata: MetadataJson): PhoneNumber | undefined;
+export function getExampleNumber(country: CountryCode, examples: Examples, metadata: MetadataJson): PhoneNumber | undefined;
 
 export function formatIncompletePhoneNumber(number: string, metadata: MetadataJson): string;
 export function formatIncompletePhoneNumber(number: string, countryCode: CountryCode, metadata: MetadataJson): string;
