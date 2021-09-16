@@ -1315,7 +1315,7 @@ When reporting `findPhoneNumbersInText()` bugs one should know that `findPhoneNu
 
 ## TypeScript
 
-[TypeScript support](https://gitlab.com/catamphetamine/libphonenumber-js/blob/master/index.d.ts) for this library is entirely community-driven. I myself don't use TypeScript. Send your pull requests.
+This library comes with TypeScript "typings". If you happen to find any bugs in those, create an issue.
 
 <!--
 https://codesandbox.io/s/damp-fast-26c7z?file=/src/index.ts
