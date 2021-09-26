@@ -86,17 +86,17 @@ export class PhoneNumber {
 }
 
 export interface NumberFound {
-  number: PhoneNumber,
-  startsAt: number,
-  endsAt: number
+  number: PhoneNumber;
+  startsAt: number;
+  endsAt: number;
 }
 
 export interface NumberFoundLegacy {
-  country: CountryCode,
-  phone: NationalNumber,
-  ext?: Extension,
-  startsAt: number,
-  endsAt: number
+  country: CountryCode;
+  phone: NationalNumber;
+  ext?: Extension;
+  startsAt: number;
+  endsAt: number;
 }
 
 export class ParseError {

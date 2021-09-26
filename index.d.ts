@@ -47,7 +47,7 @@ export type FormatNumberOptions = {
   v2?: boolean;
   fromCountry?: CountryCode;
   humanReadable?: boolean;
-  formatExtension?: FormatExtension
+  formatExtension?: FormatExtension;
 };
 
 // Legacy.
@@ -57,12 +57,12 @@ export type ParseNumberOptions = {
 };
 
 export interface ParsedNumber {
-  countryCallingCode?: CountryCallingCode,
-  country: CountryCode,
-  phone: NationalNumber,
-  ext?: Extension,
-  possible?: boolean,
-  valid?: boolean
+  countryCallingCode?: CountryCallingCode;
+  country: CountryCode;
+  phone: NationalNumber;
+  ext?: Extension;
+  possible?: boolean;
+  valid?: boolean;
 }
 
 // `parsePhoneNumber()` named export has been renamed to `parsePhoneNumberWithError()`.
@@ -165,10 +165,5 @@ export class AsYouType {
 export class Metadata {
   constructor();
   selectNumberingPlan(country: CountryCode): void;
-  // The `numberingPlan` property is declared without a `?`
-  // just so that TypeScript programmers don't have to add
-  // a needless `if (metadata.numberingPlan)` check:
-  // the `numberingPlan` property is only set after
-  // `selectNumberingPlan(country)` method has been called.
-  numberingPlan: NumberingPlan;
+  numberingPlan?: NumberingPlan;
 }

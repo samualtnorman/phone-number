@@ -110,10 +110,5 @@ export class AsYouType {
 export class Metadata {
   constructor(metadata: MetadataJson);
   selectNumberingPlan(country: CountryCode): void;
-  // The `numberingPlan` property is declared without a `?`
-  // just so that TypeScript programmers don't have to add
-  // a needless `if (metadata.numberingPlan)` check:
-  // the `numberingPlan` property is only set after
-  // `selectNumberingPlan(country)` method has been called.
-  numberingPlan: NumberingPlan;
+  numberingPlan?: NumberingPlan;
 }
