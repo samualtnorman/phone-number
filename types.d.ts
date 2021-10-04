@@ -74,6 +74,7 @@ export class PhoneNumber {
   number: E164Number;
   carrierCode?: CarrierCode;
   ext?: Extension;
+  setExt(ext: Extension): void;
   isPossible(): boolean;
   isValid(): boolean;
   getType(): NumberType;

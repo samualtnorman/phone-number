@@ -438,6 +438,24 @@ const phoneNumber = new PhoneNumber('RU', '8005553535', metadata)
 
 `PhoneNumber` class instance provides the following methods:
 
+#### `setExt(ext: string)`
+
+Sets a [phone number extension](https://en.wikipedia.org/wiki/Extension_(telephone)) of a phone number. Could be useful when formatting phone numbers stored as two separate fields: the phone number itself and the extension part.
+
+```js
+const phone = "+12133734253"
+const phoneExt = "1234"
+
+const phoneNumber = parsePhoneNumber(phone)
+if (phoneNumber) {
+  if (phoneExt) {
+    phoneNumber.setExt(phoneExt)
+  }
+  // Returns "(213) 373-4253 ext. 1234"
+  return phoneNumber.formatNational()
+}
+```
+
 #### `format(format: string, [options]): string`
 
 Formats the phone number into a string according to a `format`.

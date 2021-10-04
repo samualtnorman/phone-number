@@ -67,6 +67,11 @@ And edit the README:
 
 This changelog [only](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/16#note_594165443) mentions the changes in the code. See [Google's changelog](https://github.com/google/libphonenumber/blob/master/release_notes.txt) for metadata changes.
 
+1.9.36 / 05.10.2021
+==================
+
+* Added a [`setExt(ext: string)`](https://gitlab.com/catamphetamine/libphonenumber-js/#setextext-string) function of a `PhoneNumber` class instance. It could be useful when formatting phone numbers stored as two separate fields: the phone number itself and the extension part.
+
 1.9.27 / 09.09.2021
 ==================
 
