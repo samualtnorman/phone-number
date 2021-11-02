@@ -317,9 +317,20 @@ export default class AsYouTypeFormatter {
 		// To do that, it uses a non-strict pattern matcher written specifically for that.
 		//
 		if (leadingDigits.length < MIN_LEADING_DIGITS_LENGTH) {
-			return new PatternMatcher(leadingDigitsPattern).match(leadingDigits, { allowOverflow: true }) !== undefined
 			// Before leading digits < 3 matching was implemented:
 			// return true
+			//
+			// After leading digits < 3 matching was implemented:
+			try {
+				return new PatternMatcher(leadingDigitsPattern).match(leadingDigits, { allowOverflow: true }) !== undefined
+			} catch (error) {
+				// There's a slight possibility that there could be some undiscovered bug
+				// in the pattern matcher code. Since the "leading digits < 3 matching"
+				// feature is not "essential" for operation, it can fall back to the old way
+				// in case of any issues rather than halting the application's execution.
+				console.error(error)
+				return true
+			}
 		}
 
 		// If at least `MIN_LEADING_DIGITS_LENGTH` digits of a national number are
