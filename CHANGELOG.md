@@ -67,6 +67,11 @@ And edit the README:
 
 This changelog [only](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/16#note_594165443) mentions the changes in the code. See [Google's changelog](https://github.com/google/libphonenumber/blob/master/release_notes.txt) for metadata changes.
 
+1.9.42 / 05.11.2021
+==================
+
+* Added a better called alias for `metadata.full.json` — `metadata.max.json`.
+
 1.9.40 / 02.11.2021
 ==================
 
