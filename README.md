@@ -1319,6 +1319,10 @@ Whenever there's a "business requirement" to validate a phone number that's bein
 
 If you’re trying to build a React component with this library, take a look at [`react-phone-number-input`](https://www.npmjs.com/package/react-phone-number-input).
 
+## Node ES Modules
+
+This package currently [doesn't support](https://gitlab.com/catamphetamine/libphonenumber-js/-/tree/master/exports) Node 14+ ES Modules feature.
+
 ## Bug reporting
 
 When reporting an issue one must also provide a link to [Google's `libphonenumber` demo page](https://libphonenumber.appspot.com/) illustrating the expected behaviour. This includes validation, parsing, formatting and "as you type" formatting. For example, for an Australian number `438 331 999` Google's demo [outputs four sections](https://libphonenumber.appspot.com/phonenumberparser?number=438331999&country=AU) — "Parsing Result", "Validation Results", "Formatting Results" and "AsYouTypeFormatter Results". In a bug report, first describe the observed `libphonenumber-js` demo result and then Google's demo result (with a link to it) which must differ from the observed `libphonenumber-js` demo result. If the observed `libphonenumber-js` demo result is the same as Google's demo result and you don't agree with Google's demo result then create an issue in [Google's repo](https://github.com/googlei18n/libphonenumber).

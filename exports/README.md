@@ -1,18 +1,22 @@
 # Node ES Modules Support
 
-These are some experiments on supporting Node.js EcmaScript Modules feature.
+These are some notes on potentially supporting Node.js EcmaScript Modules feature.
 
-[Original discussion](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/42#note_718767070)
+## Why
 
-[TypeScript support](https://www.typescriptlang.org/docs/handbook/esm-node.html)
+As can be seen from the [original discussion](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/42), Node.js 14+ introduced native support for `import` syntax, but did it in its own weird incompatible way. The native support for `import` syntax can be turned on by adding `type: "module"` flag in the application's `package.json` or by using `*.mjs` file extension, but that also breaks "named exports" when importing from "legacy" packages — ones that neither use the `type: "module"` flag in their `package.json`, nor the `*.mjs` file extension.
+
+As a workaround, "named exports" can still be accessed from the `default` export, but that would look a bit hacky, and also won't cross-compile between server side and client side when writing "isomorphic" code.
+
+In order to fix that incompatibility, the library would have to include a separate build just for this new Node.js module subsystem.
 
 ## Status
 
-I have decided not to do this for now because it seems too convoluted. The new ES Modules feature in Node.js has several weird and needless restrictions that overcomplicate the whole process of supporting that feature. Among those restrictions, requiring a developer to specify an explicit file extension is just stupid.
+The solution is outlined below, but I have decided not to add it to the library for now because it seems too convoluted. The new ES Modules feature in Node.js has several weird and needless restrictions that overcomplicate the whole process of making 3rd-party libraries compatible. Among those restrictions, requiring a developer to specify an explicit file extension on all relative imports is especially stupid.
 
-Even if someone decides to implement all this and submit a pull request, I don't think that it would get merged because it's still to convoluted. They should come up with a better designed ES Module importing system.
+Even if someone decides to implement all this and submit a pull request, I don't guarantee that it would get merged because it's still convoluted. Node.js developers should come up with a better designed ES Module importing system.
 
-## Steps
+## Solution
 
 First, add the entries from `exports/package.json` file to `package.json` file.
 
@@ -76,3 +80,11 @@ Test if it works in:
 * TypeScript — See if it finds the "typings" for those `exports` entries when `import`ing from `libphonenumber-js/min`, etc.
   * Without `"compilerOptions": { "module": "nodenext" }` config.
   * With `"compilerOptions": { "module": "nodenext" }` config.
+
+## References
+
+[Node.js EcmaScript Modules](https://nodejs.org/api/packages.html)
+
+[TypeScript support](https://www.typescriptlang.org/docs/handbook/esm-node.html)
+
+[Using `esm` package instead of `type: "module"` to support `import` syntax in Node.js](https://www.npmjs.com/package/esm)
