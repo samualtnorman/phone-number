@@ -1319,9 +1319,11 @@ Whenever there's a "business requirement" to validate a phone number that's bein
 
 If you’re trying to build a React component with this library, take a look at [`react-phone-number-input`](https://www.npmjs.com/package/react-phone-number-input).
 
+<!--
 ## Node ES Modules
 
 This package currently [doesn't provide](https://gitlab.com/catamphetamine/libphonenumber-js/-/tree/master/exports) Node 14+ ES Modules exports, but that shouldn't be an issue because Node.js seems to [support](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/42) importing from "legacy" packages just fine.
+-->
 
 ## Bug reporting
 
