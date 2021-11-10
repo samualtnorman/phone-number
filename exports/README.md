@@ -1,20 +1,28 @@
 # Node ES Modules Support
 
-These are some notes on potentially supporting Node.js EcmaScript Modules feature.
+These are some notes on potentially implementing Node.js's native EcmaScript Modules support.
 
 ## Why
 
-As can be seen from the [original discussion](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/42), Node.js 14+ introduced native support for `import` syntax, but did it in its own weird incompatible way. The native support for `import` syntax can be turned on by adding `type: "module"` flag in the application's `package.json` or by using `*.mjs` file extension, but that also breaks "named exports" when importing from "legacy" packages — ones that neither use the `type: "module"` flag in their `package.json`, nor the `*.mjs` file extension.
+It originally started with a non-reproducible [issue report](https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/42).
 
-As a workaround, "named exports" can still be accessed from the `default` export, but that would look a bit hacky, and also won't cross-compile between server side and client side when writing "isomorphic" code.
+Turns out, Node.js 14+ introduced native support for `import` syntax, but did it in its own weird way. The native support for `import` syntax can be turned on by adding `type: "module"` flag in the application's `package.json` or by using `*.mjs` file extension. It also imposes a needless and stupid requirement to always specify the file extension when `import`ing from relative paths.
+
+<!--
+Turns out, Node.js 14+ introduced native support for `import` syntax, but did it in its own weird incompatible way. The native support for `import` syntax can be turned on by adding `type: "module"` flag in the application's `package.json` or by using `*.mjs` file extension, but that also breaks "named exports" when importing from "legacy" packages — ones that neither use the `type: "module"` flag in their `package.json`, nor the `*.mjs` file extension.
+
+As a workaround, "named exports" can still be accessed from the `default` export, but that would look a bit hacky, and would also only work exclusively in Node.js 14+, and won't cross-compile between server side and client side when writing "isomorphic" code because on client side the `default` export won't contain any of the "named exports".
+
+As another workaround, one could create a file
 
 In order to fix that incompatibility, the library would have to include a separate build just for this new Node.js module subsystem.
+-->
 
 ## Status
 
 The solution is outlined below, but I have decided not to add it to the library for now because it seems too convoluted. The new ES Modules feature in Node.js has several weird and needless restrictions that overcomplicate the whole process of making 3rd-party libraries compatible. Among those restrictions, requiring a developer to specify an explicit file extension on all relative imports is especially stupid.
 
-Even if someone decides to implement all this and submit a pull request, I don't guarantee that it would get merged because it's still convoluted. Node.js developers should come up with a better designed ES Module importing system.
+Even if someone decides to implement all this and submit a pull request, I don't think that it would get merged because it's still convoluted. Node.js developers should come up with a better designed ES Module importing system.
 
 ## Solution
 
