@@ -1082,6 +1082,212 @@ describe('AsYouType', () => {
 	})
 })
 
+describe('AsYouType.getNumberValue()', () => {
+	it('should return E.164 number value (national number, with national prefix, default country: US)', () => {
+		const formatter = new AsYouType('US')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (national number, with national prefix, default calling code: 1)', () => {
+		const formatter = new AsYouType({ defaultCallingCode: '1' })
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (national number, default country: US)', () => {
+		const formatter = new AsYouType('US')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (national number, default calling code: 1)', () => {
+		const formatter = new AsYouType({ defaultCallingCode: '1' })
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (international number, default country: US)', () => {
+		const formatter = new AsYouType('US')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('+')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (international number, other default country: RU)', () => {
+		const formatter = new AsYouType('RU')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('+')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (international number, default calling code: 1)', () => {
+		const formatter = new AsYouType('US', { defaultCallingCode: '1' })
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('+')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (international number, other default calling code: 7)', () => {
+		const formatter = new AsYouType('US', { defaultCallingCode: '7' })
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('+')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (international number)', () => {
+		const formatter = new AsYouType()
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('+')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+1')
+		formatter.input('2')
+		formatter.getNumberValue().should.equal('+12')
+		formatter.input('1')
+		formatter.getNumberValue().should.equal('+121')
+		formatter.input('3')
+		formatter.getNumberValue().should.equal('+1213')
+		formatter.input('373-4253')
+		formatter.getNumberValue().should.equal('+12133734253')
+		formatter.input('4')
+		formatter.getNumberValue().should.equal('+121337342534')
+	})
+
+	it('should return E.164 number value (national number) (no default country or calling code)', () => {
+		const formatter = new AsYouType()
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('1')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('12')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('3')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('373-4253')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('4')
+		expect(formatter.getNumberValue()).to.be.undefined
+	})
+})
+
 function type(something) {
 	return typeof something
 }
