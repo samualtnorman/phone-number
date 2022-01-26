@@ -1080,6 +1080,23 @@ describe('AsYouType', () => {
 		formatter.input('123')
 		formatter.getChars().should.equal('123')
 	})
+
+	// A test confirming the case when input `"11"` for country `"US"`
+	// produces `value` `"+11"`.
+	// https://gitlab.com/catamphetamine/react-phone-number-input/-/issues/113
+	it('should determine the national (significant) part correctly when input with national prefix in US', () => {
+		const formatter = new AsYouType('US')
+		// As soon as the user has input `"11"`, no `format` matches
+		// those "national number" digits in the `"US"` country metadata.
+		// Since no `format` matches, the number doesn't seem like a valid one,
+		// so it attempts to see if the user "forgot" to input a `"+"` at the start.
+		// And it looks like they might've to.
+		// So it acts as if the leading `"+"` is there,
+		// as if the user's input is `"+11"`.
+		// See `AsYouType.fixMissingPlus()` function.
+		formatter.input('1 122 222 2222 3').should.equal('1 1 222 222 2223')
+		formatter.getNumber().nationalNumber.should.equal('2222222223')
+	})
 })
 
 describe('AsYouType.getNumberValue()', () => {
