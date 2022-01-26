@@ -1172,6 +1172,17 @@ describe('AsYouType.getNumberValue()', () => {
 		formatter.getNumberValue().should.equal('+121337342534')
 	})
 
+	it('should return E.164 number value (international number, not a valid calling code)', () => {
+		const formatter = new AsYouType()
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('+')
+		expect(formatter.getNumberValue()).to.be.undefined
+		formatter.input('2150')
+		formatter.getNumberValue().should.equal('+2150')
+	})
+
 	it('should return E.164 number value (international number, default country: US)', () => {
 		const formatter = new AsYouType('US')
 		expect(formatter.getNumberValue()).to.be.undefined
