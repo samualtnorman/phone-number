@@ -142,18 +142,6 @@ const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || Math.pow(2, 53) - 1
  */
 export default class PhoneNumberMatcher
 {
-  /** The iteration tristate. */
-  state = 'NOT_READY'
-
-  /** The next index to start searching at. Undefined in {@link State#DONE}. */
-  searchIndex = 0
-
-  // A cache for frequently used country-specific regular expressions. Set to 32 to cover ~2-3
-  // countries being used for the same doc with ~10 patterns for each country. Some pages will have
-  // a lot more countries in use, but typically fewer numbers for each so expanding the cache for
-  // that use-case won't have a lot of benefit.
-  regExpCache = new RegExpCache(32)
-
   /**
    * Creates a new instance. See the factory methods in {@link PhoneNumberUtil} on how to obtain a
    * new instance.
@@ -202,6 +190,19 @@ export default class PhoneNumberMatcher
 		this.maxTries = options.maxTries
 
 		this.PATTERN = new RegExp(PATTERN, 'ig')
+
+
+    /** The iteration tristate. */
+    this.state = 'NOT_READY'
+
+    /** The next index to start searching at. Undefined in {@link State#DONE}. */
+    this.searchIndex = 0
+
+    // A cache for frequently used country-specific regular expressions. Set to 32 to cover ~2-3
+    // countries being used for the same doc with ~10 patterns for each country. Some pages will have
+    // a lot more countries in use, but typically fewer numbers for each so expanding the cache for
+    // that use-case won't have a lot of benefit.
+    this.regExpCache = new RegExpCache(32)
   }
 
   /**

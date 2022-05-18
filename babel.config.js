@@ -3,8 +3,7 @@ module.exports = {
 		"@babel/env"
 	],
 	"plugins": [
-		["@babel/transform-for-of", { "loose": true }],
-		"@babel/proposal-class-properties"
+		["@babel/transform-for-of", { "loose": true }]
 	],
 	"env": {
 		"es6": {

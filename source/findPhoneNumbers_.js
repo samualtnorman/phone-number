@@ -89,15 +89,15 @@ export function searchPhoneNumbers(text, options, metadata) {
  * @return {object} `{ ?number, ?startsAt, ?endsAt }`.
  */
 export class PhoneNumberSearch {
-	// Iteration tristate.
-	state = 'NOT_READY'
-
 	constructor(text, options, metadata) {
 		this.text = text
 		// If assigning the `{}` default value is moved to the arguments above,
 		// code coverage would decrease for some weird reason.
 		this.options = options || {}
 		this.metadata = metadata
+
+		// Iteration tristate.
+		this.state = 'NOT_READY'
 
 		this.regexp = new RegExp(VALID_PHONE_NUMBER_WITH_EXTENSION, 'ig')
 	}

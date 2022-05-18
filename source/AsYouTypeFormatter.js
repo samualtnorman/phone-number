@@ -161,11 +161,11 @@ export default class AsYouTypeFormatter {
 					format,
 					{
 						metadata: this.metadata,
-						shouldTryNationalPrefixFormattingRule: format => this.shouldTryNationalPrefixFormattingRule(format, {
+						shouldTryNationalPrefixFormattingRule: (format) => this.shouldTryNationalPrefixFormattingRule(format, {
 							international: state.international,
 							nationalPrefix: state.nationalPrefix
 						}),
-						getSeparatorAfterNationalPrefix: this.getSeparatorAfterNationalPrefix
+						getSeparatorAfterNationalPrefix: (format) => this.getSeparatorAfterNationalPrefix(format)
 					}
 				)
 				if (formattedCompleteNumber) {
@@ -434,7 +434,7 @@ export default class AsYouTypeFormatter {
 		}
 	}
 
-	getSeparatorAfterNationalPrefix = (format) => {
+	getSeparatorAfterNationalPrefix(format) {
 		// `US` metadata doesn't have a `national_prefix_formatting_rule`,
 		// so the `if` condition below doesn't apply to `US`,
 		// but in reality there shoudl be a separator
@@ -683,7 +683,7 @@ export default class AsYouTypeFormatter {
 		// 	.replace(new RegExp(DIGIT_PLACEHOLDER, 'g'), ' ')
 	}
 
-	shouldTryNationalPrefixFormattingRule = (format, { international, nationalPrefix }) => {
+	shouldTryNationalPrefixFormattingRule(format, { international, nationalPrefix }) {
 		if (format.nationalPrefixFormattingRule()) {
 			// In some countries, `national_prefix_formatting_rule` is `($1)`,
 			// so it applies even if the user hasn't input a national prefix.
