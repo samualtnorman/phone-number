@@ -6,19 +6,19 @@ import {
 	closeNonPairedParens,
 	stripNonPairedParens,
 	populateTemplateWithDigits
-} from './AsYouTypeFormatter.util'
+} from './AsYouTypeFormatter.util.js'
 
 import formatCompleteNumber, {
 	canFormatCompleteNumber
-} from './AsYouTypeFormatter.complete'
+} from './AsYouTypeFormatter.complete.js'
 
-import PatternMatcher from './AsYouTypeFormatter.PatternMatcher'
+import PatternMatcher from './AsYouTypeFormatter.PatternMatcher.js'
 
-import parseDigits from './helpers/parseDigits'
-export { DIGIT_PLACEHOLDER } from './AsYouTypeFormatter.util'
-import { FIRST_GROUP_PATTERN } from './helpers/formatNationalNumberUsingFormat'
-import { VALID_PUNCTUATION } from './constants'
-import applyInternationalSeparatorStyle from './helpers/applyInternationalSeparatorStyle'
+import parseDigits from './helpers/parseDigits.js'
+export { DIGIT_PLACEHOLDER } from './AsYouTypeFormatter.util.js'
+import { FIRST_GROUP_PATTERN } from './helpers/formatNationalNumberUsingFormat.js'
+import { VALID_PUNCTUATION } from './constants.js'
+import applyInternationalSeparatorStyle from './helpers/applyInternationalSeparatorStyle.js'
 
 // Used in phone number format template creation.
 // Could be any digit, I guess.

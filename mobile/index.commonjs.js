@@ -1,7 +1,7 @@
 'use strict'
 
 var metadata = require('../metadata.mobile.json')
-var core = require('../core/index.commonjs')
+var core = require('../core/index.commonjs.js')
 
 function call(func, _arguments) {
 	var args = Array.prototype.slice.call(_arguments)

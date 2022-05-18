@@ -65,7 +65,7 @@ import defaultExportParse,
 	DIGIT_PLACEHOLDER,
 	DIGITS
 }
-from '../index.es6'
+from '../index.es6.js'
 
 import metadata from '../metadata.min.json'
 import examples from '../examples.mobile.json'
@@ -147,7 +147,7 @@ describe(`exports`, () => {
 	})
 
 	it(`should export CommonJS`, () => {
-		const Library = require('../index.common')
+		const Library = require('../index.common.js')
 
 		Library('+12133734253').nationalNumber.should.equal('2133734253')
 		Library.default('+12133734253').nationalNumber.should.equal('2133734253')
@@ -212,7 +212,7 @@ describe(`exports`, () => {
 	})
 
 	it(`should export CommonJS custom functions`, () => {
-		const Library = require('../custom')
+		const Library = require('../custom.js')
 
 		expect(Library.ParseError).to.be.a('function')
 

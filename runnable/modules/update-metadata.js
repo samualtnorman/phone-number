@@ -1,4 +1,4 @@
-var exec = require('./exec')
+var exec = require('./exec.js')
 
 module.exports = function()
 {

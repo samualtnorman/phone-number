@@ -1,5 +1,5 @@
-import Metadata from '../metadata'
-import matchesEntirely from './matchesEntirely'
+import Metadata from '../metadata.js'
+import matchesEntirely from './matchesEntirely.js'
 
 const NON_FIXED_LINE_PHONE_TYPES = [
 	'MOBILE',

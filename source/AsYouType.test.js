@@ -1,5 +1,5 @@
 import metadata from '../metadata.min.json'
-import AsYouType_ from './AsYouType'
+import AsYouType_ from './AsYouType.js'
 
 class AsYouType extends AsYouType_ {
 	constructor(country_code) {

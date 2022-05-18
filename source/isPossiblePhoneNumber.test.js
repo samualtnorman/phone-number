@@ -1,4 +1,4 @@
-import _isPossiblePhoneNumber from './isPossiblePhoneNumber'
+import _isPossiblePhoneNumber from './isPossiblePhoneNumber.js'
 import metadata from '../metadata.min.json'
 
 function isPossiblePhoneNumber(...parameters) {

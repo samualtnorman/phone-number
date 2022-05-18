@@ -1,6 +1,6 @@
 import metadata from '../../metadata.max.json'
-import Metadata from '../metadata'
-import { checkNumberLengthForType } from './checkNumberLength'
+import Metadata from '../metadata.js'
+import { checkNumberLengthForType } from './checkNumberLength.js'
 
 describe('checkNumberLength', () => {
 	it('should check phone number length', () => {

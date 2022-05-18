@@ -3,11 +3,11 @@
 //
 // https://github.com/googlei18n/libphonenumber/commits/master/javascript/i18n/phonenumbers/phonenumberutil.js
 
-import matchesEntirely from './helpers/matchesEntirely'
-import formatNationalNumberUsingFormat from './helpers/formatNationalNumberUsingFormat'
-import Metadata, { getCountryCallingCode } from './metadata'
-import getIddPrefix from './helpers/getIddPrefix'
-import { formatRFC3966 } from './helpers/RFC3966'
+import matchesEntirely from './helpers/matchesEntirely.js'
+import formatNationalNumberUsingFormat from './helpers/formatNationalNumberUsingFormat.js'
+import Metadata, { getCountryCallingCode } from './metadata.js'
+import getIddPrefix from './helpers/getIddPrefix.js'
+import { formatRFC3966 } from './helpers/RFC3966.js'
 
 const DEFAULT_OPTIONS = {
 	formatExtension: (formattedNumber, extension, metadata) => `${formattedNumber}${metadata.ext()}${extension}`

@@ -1,14 +1,14 @@
-import extractCountryCallingCode from './helpers/extractCountryCallingCode'
-import extractCountryCallingCodeFromInternationalNumberWithoutPlusSign from './helpers/extractCountryCallingCodeFromInternationalNumberWithoutPlusSign'
-import extractNationalNumberFromPossiblyIncompleteNumber from './helpers/extractNationalNumberFromPossiblyIncompleteNumber'
-import stripIddPrefix from './helpers/stripIddPrefix'
-import parseDigits from './helpers/parseDigits'
+import extractCountryCallingCode from './helpers/extractCountryCallingCode.js'
+import extractCountryCallingCodeFromInternationalNumberWithoutPlusSign from './helpers/extractCountryCallingCodeFromInternationalNumberWithoutPlusSign.js'
+import extractNationalNumberFromPossiblyIncompleteNumber from './helpers/extractNationalNumberFromPossiblyIncompleteNumber.js'
+import stripIddPrefix from './helpers/stripIddPrefix.js'
+import parseDigits from './helpers/parseDigits.js'
 
 import {
 	VALID_DIGITS,
 	VALID_PUNCTUATION,
 	PLUS_CHARS
-} from './constants'
+} from './constants.js'
 
 const VALID_FORMATTED_PHONE_NUMBER_DIGITS_PART =
 	'[' +

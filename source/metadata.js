@@ -1,4 +1,4 @@
-import compare from './tools/semver-compare'
+import compare from './tools/semver-compare.js'
 
 // Added "possibleLengths" and renamed
 // "country_phone_code_to_countries" to "country_calling_codes".

@@ -1,6 +1,6 @@
 import metadata from '../metadata.min.json'
 
-import Metadata, { validateMetadata, getExtPrefix, isSupportedCountry } from './metadata'
+import Metadata, { validateMetadata, getExtPrefix, isSupportedCountry } from './metadata.js'
 
 describe('metadata', () => {
 	it('should return undefined for non-defined types', () => {

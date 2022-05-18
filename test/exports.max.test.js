@@ -31,7 +31,7 @@ import parse, {
 
 	parseRFC3966,
 	formatRFC3966
-} from '../max/index'
+} from '../max/index.js'
 
 import examples from '../examples.mobile.json'
 
@@ -101,7 +101,7 @@ describe('exports/max', () => {
 	})
 
 	it('should export CommonJS', () => {
-		const Library = require('../max/index.commonjs')
+		const Library = require('../max/index.commonjs.js')
 
 		expect(Library.ParseError).to.be.a('function')
 

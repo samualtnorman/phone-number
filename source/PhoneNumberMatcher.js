@@ -4,22 +4,22 @@
  * Date: 08.03.2018.
  */
 
-import PhoneNumber from './PhoneNumber'
+import PhoneNumber from './PhoneNumber.js'
 
 import {
   MAX_LENGTH_FOR_NSN,
   MAX_LENGTH_COUNTRY_CODE,
   VALID_PUNCTUATION
-} from './constants'
+} from './constants.js'
 
-import createExtensionPattern from './helpers/extension/createExtensionPattern'
+import createExtensionPattern from './helpers/extension/createExtensionPattern.js'
 
-import RegExpCache from './findNumbers/RegExpCache'
+import RegExpCache from './findNumbers/RegExpCache.js'
 
 import {
 	limit,
 	trimAfterFirstMatch
-} from './findNumbers/util'
+} from './findNumbers/util.js'
 
 import {
 	_pL,
@@ -27,16 +27,16 @@ import {
 	pZ,
 	PZ,
 	pNd
-} from './findNumbers/utf-8'
+} from './findNumbers/utf-8.js'
 
-import Leniency from './findNumbers/Leniency'
-import parsePreCandidate from './findNumbers/parsePreCandidate'
-import isValidPreCandidate from './findNumbers/isValidPreCandidate'
-import isValidCandidate, { LEAD_CLASS } from './findNumbers/isValidCandidate'
+import Leniency from './findNumbers/Leniency.js'
+import parsePreCandidate from './findNumbers/parsePreCandidate.js'
+import isValidPreCandidate from './findNumbers/isValidPreCandidate.js'
+import isValidCandidate, { LEAD_CLASS } from './findNumbers/isValidCandidate.js'
 
-import { isSupportedCountry } from './metadata'
+import { isSupportedCountry } from './metadata.js'
 
-import parseNumber from './parse_'
+import parseNumber from './parse_.js'
 
 const EXTN_PATTERNS_FOR_MATCHING = createExtensionPattern('matching')
 

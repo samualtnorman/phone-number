@@ -1,6 +1,6 @@
-var update_metadata = require('./modules/update-metadata')
-var commit          = require('./modules/commit')
-var exec            = require('./modules/exec')
+var update_metadata = require('./modules/update-metadata.js')
+var commit          = require('./modules/commit.js')
+var exec            = require('./modules/exec.js')
 
 if (update_metadata())
 {

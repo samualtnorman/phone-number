@@ -31,7 +31,7 @@ import parse, {
 
 	parseRFC3966,
 	formatRFC3966
-} from '../core'
+} from '../core/index.js'
 
 import metadata from '../metadata.min.json'
 import examples from '../examples.mobile.json'
@@ -78,7 +78,7 @@ describe('exports/core', () => {
 	})
 
 	it('should export CommonJS', () => {
-		const Library = require('../core/index.commonjs')
+		const Library = require('../core/index.commonjs.js')
 
 		expect(Library.ParseError).to.be.a('function')
 
