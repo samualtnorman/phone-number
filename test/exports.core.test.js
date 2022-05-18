@@ -33,6 +33,8 @@ import parse, {
 	formatRFC3966
 } from '../core/index.js'
 
+import Library from '../core/index.cjs'
+
 import metadata from '../metadata.min.json'
 import examples from '../examples.mobile.json'
 
@@ -78,8 +80,6 @@ describe('exports/core', () => {
 	})
 
 	it('should export CommonJS', () => {
-		const Library = require('../core/index.commonjs.js')
-
 		expect(Library.ParseError).to.be.a('function')
 
 		Library('+12133734253', metadata).nationalNumber.should.equal('2133734253')

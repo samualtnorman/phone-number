@@ -3,7 +3,85 @@
   "version": "1.9.53",
   "description": "A simpler (and smaller) rewrite of Google Android's libphonenumber library in javascript",
   "main": "index.common.js",
-  "module": "index.es6.js",
+  "module": "index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.cjs"
+    },
+    "./min": {
+      "types": "./min/index.d.ts",
+      "import": "./min/index.js",
+      "require": "./min/index.commonjs.js"
+    },
+    "./max": {
+      "types": "./min/index.d.ts",
+      "import": "./max/index.js",
+      "require": "./max/index.commonjs.js"
+    },
+    "./mobile": {
+      "types": "./min/index.d.ts",
+      "import": "./mobile/index.js",
+      "require": "./mobile/index.commonjs.js"
+    },
+    "./core": {
+      "types": "./core/index.d.ts",
+      "import": "./core/index.js",
+      "require": "./core/index.commonjs.js"
+    },
+    "./metadata.min": {
+      "types": "./metadata.min.json.d.ts",
+      "import": "./metadata.min.json.js",
+      "require": "./metadata.min.json"
+    },
+    "./metadata.min.json": {
+      "types": "./metadata.min.json.d.ts",
+      "import": "./metadata.min.json.js",
+      "require": "./metadata.min.json"
+    },
+    "./metadata.full": {
+      "types": "./metadata.max.json.d.ts",
+      "import": "./metadata.max.json.js",
+      "require": "./metadata.max.json"
+    },
+    "./metadata.full.json": {
+      "types": "./metadata.max.json.d.ts",
+      "import": "./metadata.max.json.js",
+      "require": "./metadata.max.json"
+    },
+    "./metadata.max": {
+      "types": "./metadata.max.json.d.ts",
+      "import": "./metadata.max.json.js",
+      "require": "./metadata.max.json"
+    },
+    "./metadata.max.json": {
+      "types": "./metadata.max.json.d.ts",
+      "import": "./metadata.max.json.js",
+      "require": "./metadata.max.json"
+    },
+    "./metadata.mobile": {
+      "types": "./metadata.mobile.json.d.ts",
+      "import": "./metadata.mobile.json.js",
+      "require": "./metadata.mobile.json"
+    },
+    "./metadata.mobile.json": {
+      "types": "./metadata.mobile.json.d.ts",
+      "import": "./metadata.mobile.json.js",
+      "require": "./metadata.mobile.json"
+    },
+    "./examples.mobile": {
+      "types": "./examples.mobile.json.d.ts",
+      "import": "./examples.mobile.json.js",
+      "require": "./examples.mobile.json"
+    },
+    "./examples.mobile.json": {
+      "types": "./examples.mobile.json.d.ts",
+      "import": "./examples.mobile.json.js",
+      "require": "./examples.mobile.json"
+    }
+  },
   "sideEffects": false,
   "dependencies": {},
   "devDependencies": {
@@ -49,13 +127,18 @@
     "metadata:generate:mobile:examples:js": "babel-node -- runnable/json-to-js ./examples.mobile.json",
     "metadata:download": "babel-node runnable/download https://raw.githubusercontent.com/googlei18n/libphonenumber/master/resources/PhoneNumberMetadata.xml PhoneNumberMetadata.xml",
     "generate-country-codes": "babel-node -- runnable/generate-country-codes",
-    "test": "mocha --require @babel/register --colors --bail --reporter spec --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\" --recursive",
-    "test-coverage": "istanbul cover -x \"build/**\" -x \"es6/**\" -x \"*.test.js\" -x \"source/findNumbers/Leniency.js\" -x \"source/findNumbers/RegExpCache.js\" -x \"source/findNumbers/LRUCache.js\" -x \"source/PhoneNumberMatcher.js\" -x \"source/tools/semver-compare.js\" node_modules/mocha/bin/_mocha -- --require @babel/register --colors --reporter dot --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\" --recursive",
-    "test-coverage--nyc-is-very-slow-and-is-not-used": "cross-env NODE_ENV=nyc nyc mocha --require @babel/register --bail --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\"",
+    "test": "node --experimental-json-modules node_modules/mocha/bin/_mocha --colors --bail --reporter spec --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\" --recursive",
+    "test-coverage": "npm-run-all build:commonjs test-coverage:commonjs",
+    "test-coverage:commonjs": "node --experimental-json-modules node_modules/istanbul/lib/cli.js cover -x \"es6/**\" -x \"*.test.js\" -x \"build/findNumbers/Leniency.js\" -x \"build/findNumbers/RegExpCache.js\" -x \"build/findNumbers/LRUCache.js\" -x \"build/PhoneNumberMatcher.js\" -x \"build/tools/semver-compare.js\" node_modules/mocha/bin/_mocha -- --colors --reporter dot --require ./test/setup.js \"build/**/*.test.js\" --recursive",
+    "test-coverage--does-not-work-with-es-modules": "node --experimental-json-modules node_modules/istanbul/lib/cli.js cover -x \"build/**\" -x \"es6/**\" -x \"*.test.js\" -x \"source/findNumbers/Leniency.js\" -x \"source/findNumbers/RegExpCache.js\" -x \"source/findNumbers/LRUCache.js\" -x \"source/PhoneNumberMatcher.js\" -x \"source/tools/semver-compare.js\" node_modules/mocha/bin/_mocha -- --colors --reporter dot --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\" --recursive",
+    "test-coverage--nyc--does-not-work-with-es-modules": "cross-env nyc node --experimental-json-modules node_modules/mocha/bin/_mocha --bail --require @babel/register --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\"",
     "coveralls--nyc-is-very-slow-and-is-not-used": "nyc report --reporter=text-lcov | coveralls",
-    "test-travis": "istanbul cover -x \"build/**\" -x \"es6/**\" -x \"*.test.js\" -x \"source/findNumbers/Leniency.js\" -x \"source/findNumbers/RegExpCache.js\" -x \"source/findNumbers/LRUCache.js\" -x \"source/PhoneNumberMatcher.js\" -x \"source/tools/semver-compare.js\" node_modules/mocha/bin/_mocha --report lcovonly -- --require @babel/register --colors --reporter spec --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\" --recursive",
+    "test-travis": "node --experimental-json-modules node_modules/istanbul/lib/cli.js cover -x \"build/**\" -x \"es6/**\" -x \"*.test.js\" -x \"source/findNumbers/Leniency.js\" -x \"source/findNumbers/RegExpCache.js\" -x \"source/findNumbers/LRUCache.js\" -x \"source/PhoneNumberMatcher.js\" -x \"source/tools/semver-compare.js\" node_modules/mocha/bin/_mocha --report lcovonly -- --require @babel/register --colors --reporter spec --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\" --recursive",
     "clean": "rimraf ./build/**/* ./es6/**/*",
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel ./source --out-dir ./build --source-maps --ignore test.js",
+    "build:commonjs": "npm-run-all build:commonjs:with-tests build:commonjs:package.json",
+    "build:commonjs:before-es-modules": "cross-env BABEL_ENV=commonjs babel ./source --out-dir ./build --source-maps --ignore test.js",
+    "build:commonjs:with-tests": "cross-env BABEL_ENV=commonjs babel ./source --out-dir ./build --source-maps",
+    "build:commonjs:package.json": "node runnable/create-commonjs-package-json.js",
     "build:modules": "cross-env BABEL_ENV=es6 babel ./source --out-dir ./es6 --source-maps --ignore test.js",
     "build:bundle": "rollup --config rollup.config.mjs",
     "build": "npm-run-all clean build:commonjs build:modules build:bundle",

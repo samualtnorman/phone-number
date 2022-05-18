@@ -283,6 +283,7 @@ export default class AsYouTypeFormatter {
 
 		// If this format is not restricted to a certain
 		// leading digits pattern then it fits.
+		// The test case could be found by searching for "leadingDigitsPatternsCount === 0".
 		if (leadingDigitsPatternsCount === 0) {
 			return true
 		}
@@ -353,6 +354,19 @@ export default class AsYouTypeFormatter {
 	chooseFormat(state) {
 		// When there are multiple available formats, the formatter uses the first
 		// format where a formatting template could be created.
+		//
+		// For some weird reason, `istanbul` says "else path not taken"
+		// for the `for of` line below. Supposedly that means that
+		// the loop doesn't ever go over the last element in the list.
+		// That's true because there always is `this.chosenFormat`
+		// when `this.matchingFormats` is non-empty.
+		// And, for some weird reason, it doesn't think that the case
+		// with empty `this.matchingFormats` qualifies for a valid "else" path.
+		// So simply muting this `istanbul` warning.
+		// It doesn't skip the contents of the `for of` loop,
+		// it just skips the `for of` line.
+		//
+		/* istanbul ignore next */
 		for (const format of this.matchingFormats.slice()) {
 			// If this format is currently being used
 			// and is still suitable, then stick to it.

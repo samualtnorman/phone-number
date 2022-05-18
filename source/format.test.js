@@ -24,6 +24,15 @@ describe('format', () => {
 		formatNumber('2133734253', 'US', 'INTERNATIONAL').should.equal('+1 213 373 4253')
 	})
 
+	it('should support legacy "National" / "International" formats', () => {
+		formatNumber('2133734253', 'US', 'National').should.equal('(213) 373-4253')
+		formatNumber('2133734253', 'US', 'International').should.equal('+1 213 373 4253')
+	})
+
+	it('should format using formats with no leading digits (`format.leadingDigitsPatterns().length === 0`)', () => {
+		formatNumber({ phone: '12345678901', countryCallingCode: 888 }, 'INTERNATIONAL').should.equal('+888 123 456 78901')
+	})
+
 	it('should sort out the arguments', () => {
 		const options = {
 			formatExtension: (number, extension) => `${number} доб. ${extension}`

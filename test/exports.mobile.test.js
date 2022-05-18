@@ -33,6 +33,8 @@ import parse, {
 	formatRFC3966
 } from '../mobile/index.js'
 
+import Library from '../mobile/index.cjs'
+
 import metadata from '../metadata.mobile.json'
 import examples from '../examples.mobile.json'
 
@@ -102,8 +104,6 @@ describe('exports/mobile', () => {
 	})
 
 	it('should export CommonJS', () => {
-		const Library = require('../mobile/index.commonjs.js')
-
 		expect(Library.ParseError).to.be.a('function')
 
 		// `parsePhoneNumber()` named export has been renamed to `parsePhoneNumberWithError()`.

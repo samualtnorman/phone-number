@@ -1330,6 +1330,13 @@ describe('AsYouType.getNumberValue()', () => {
 		formatter.input('6').should.equal('901 123 456')
 		formatter.input('7').should.equal('901 123 4567')
 	})
+
+	it('should work for formats with no leading digits (`leadingDigitsPatternsCount === 0`)', function() {
+		const formatter = new AsYouType({
+			defaultCallingCode: 888
+		})
+		formatter.input('1').should.equal('1')
+	})
 })
 
 function type(something) {

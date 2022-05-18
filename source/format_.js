@@ -128,7 +128,9 @@ function formatNationalNumber(number, carrierCode, formatAs, metadata, options) 
 
 function chooseFormatForNumber(availableFormats, nationalNnumber) {
 	for (const format of availableFormats) {
-		// Validate leading digits
+		// Validate leading digits.
+		// The test case for "else path" could be found by searching for
+		// "format.leadingDigitsPatterns().length === 0".
 		if (format.leadingDigitsPatterns().length > 0) {
 			// The last leading_digits_pattern is used here, as it is the most detailed
 			const lastLeadingDigitsPattern = format.leadingDigitsPatterns()[format.leadingDigitsPatterns().length - 1]

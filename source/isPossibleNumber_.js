@@ -31,6 +31,7 @@ export default function isPossiblePhoneNumber(input, options, metadata) {
 		}
 	}
 
+	// Old metadata (< 1.0.18) had no "possible length" data.
 	if (metadata.possibleLengths()) {
 		return isPossibleNumber(input.phone || input.nationalNumber, metadata)
 	} else {
