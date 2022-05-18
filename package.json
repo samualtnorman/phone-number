@@ -14,22 +14,22 @@
     "./min": {
       "types": "./min/index.d.ts",
       "import": "./min/index.js",
-      "require": "./min/index.commonjs.js"
+      "require": "./min/index.cjs"
     },
     "./max": {
       "types": "./min/index.d.ts",
       "import": "./max/index.js",
-      "require": "./max/index.commonjs.js"
+      "require": "./max/index.cjs"
     },
     "./mobile": {
       "types": "./min/index.d.ts",
       "import": "./mobile/index.js",
-      "require": "./mobile/index.commonjs.js"
+      "require": "./mobile/index.cjs"
     },
     "./core": {
       "types": "./core/index.d.ts",
       "import": "./core/index.js",
-      "require": "./core/index.commonjs.js"
+      "require": "./core/index.cjs"
     },
     "./metadata.min": {
       "types": "./metadata.min.json.d.ts",
