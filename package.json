@@ -80,7 +80,8 @@
       "types": "./examples.mobile.json.d.ts",
       "import": "./examples.mobile.json.js",
       "require": "./examples.mobile.json"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "dependencies": {},
