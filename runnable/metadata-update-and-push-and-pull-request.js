@@ -4,9 +4,9 @@
 // * Create a "Personal Access Token" in GitHub account settings (just "repo_public" would be enough)
 // * Tell `hub` to use the token for creating GitHub pull requests: `echo "---\ngithub.com:\n- protocol: https\n  user: GITHUB_USERNAME\n  oauth_token: TOKEN" >> ~/.config/hub`
 
-var update_metadata = require('./modules/update-metadata.js')
-var commit          = require('./modules/commit.js')
-var exec            = require('./modules/exec.js')
+import update_metadata from './modules/update-metadata.js'
+import commit from './modules/commit.js'
+import exec from './modules/exec.js'
 
 if (update_metadata())
 {
