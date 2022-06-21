@@ -1343,6 +1343,19 @@ describe('AsYouType.getNumberValue()', () => {
 		})
 		formatter.input('1').should.equal('1')
 	})
+
+	it('should work for SK phone numbers', function() {
+		// There was a bug: "leading digits" `"2"` matched "leading digits pattern" `"90"`.
+		// The incorrect `.match()` function result was `{ oveflow: true }`
+		// while it should've been `undefined`.
+		// https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/66
+		const formatter = new AsYouType('SK')
+		formatter.input('090').should.equal('090')
+		formatter.reset()
+		formatter.input('080').should.equal('080')
+		formatter.reset()
+		formatter.input('059').should.equal('059')
+	})
 })
 
 function type(something) {
