@@ -62,7 +62,7 @@ Other national prefix examples: `1` in US, `0` in France and UK, `8` in Russia.
 
 ### `national_prefix_for_parsing` / `national_prefix_transform_rule`
 
-`national_prefix_for_parsing` is used to parse a [national (significant) number](https://github.com/catamphetamine/libphonenumber-js#national-significant-number) from a phone number. Contrary to its name, `national_prefix_for_parsing` is used not just for parsing a "national prefix" out of a phone number (just `national_prefix` property would be sufficient for that), but also for parsing any other possible phone number prefixes out of a phone number, if there're any, and for any other cases like fixing a missing area code. So it's actually not a "national prefix for parsing", but rather a "national (significant) number extraction mechanism".
+`national_prefix_for_parsing` is used to parse a [national (significant) number](https://gitlab.com/catamphetamine/libphonenumber-js#national-significant-number) from a phone number. Contrary to its name, `national_prefix_for_parsing` is used not just for parsing a "national prefix" out of a phone number (just `national_prefix` property would be sufficient for that), but also for parsing any other possible phone number prefixes out of a phone number, if there're any, and for any other cases like fixing a missing area code. So it's actually not a "national prefix for parsing", but rather a "national (significant) number extraction mechanism".
 
 `national_prefix_for_parsing` is a regular expression that could (or could not) have some ["capturing groups"](https://www.regular-expressions.info/refcapture.html). If there're any "capturing groups", then `national_prefix_for_parsing` is accompanied by `national_prefix_transform_rule`: yet another incorrect name by Google, because `national_prefix_transform_rule` is not a "rule for transforming a national prefix", but rather a "template to transform the captured groups into a national (significant) number".
 
@@ -86,7 +86,7 @@ Whatever national prefix has been extracted, it's not used anywhere: instead, `n
 
 ### `types`
 
-Regular expressions for all possible phone number types for this country: fixed line, mobile, toll free, premium rate, [etc](https://github.com/catamphetamine/libphonenumber-js#gettype).
+Regular expressions for all possible phone number [types](https://gitlab.com/catamphetamine/libphonenumber-js#gettype-string) for this country: `fixed_line`, `mobile`, `toll_free`, `premium_rate`, etc.
 
 #### `type` `pattern`
 
@@ -148,6 +148,6 @@ For example, Google's `libphonenumber` has `formatNumberForMobileDialing()` func
 
 ## Non-geographic
 
-There're [calling codes](https://github.com/catamphetamine/libphonenumber-js#non-geographic) that don't correspond to any country. For example, "Global Mobile Satellite System" (`+881`). Such phone numbering systems are called "non-geographic entities" in Google's code. These "non-geographic entitites" reside in their own `nonGeographic` property, analogous to the `countries` property. `nonGeographic` is an object with keys being calling codes of the corresponding "non-geographic entities", and values being same as the values of the `countries` property.
+There're [calling codes](https://gitlab.com/catamphetamine/libphonenumber-js#non-geographic) that don't correspond to any country. For example, "Global Mobile Satellite System" (`+881`). Such phone numbering systems are called "non-geographic entities" in Google's code. These "non-geographic entitites" reside in their own `nonGeographic` property, analogous to the `countries` property. `nonGeographic` is an object with keys being calling codes of the corresponding "non-geographic entities", and values being same as the values of the `countries` property.
 
 "Non-geographic" numbering plans don't have [`possible_lengths`](#possible-lengths).
