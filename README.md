@@ -539,6 +539,12 @@ Is just an alias for `this.isValid() && this.country === country`.
 https://github.com/googlei18n/libphonenumber/blob/master/FAQ.md#when-should-i-use-isvalidnumberforregion
 -->
 
+#### `getPossibleCountries(): string[]`
+
+Returns a list of countries this phone number could possibly belong to.
+
+Can be used when parsing complete international phone numbers containing a "calling code" that is shared between several countries. If parsing such a phone number returns `country: undefined` then `getPossibleCountries()` function could be used to somehow speculate about what country could this phone number possibly belong to.
+
 #### `getType(): string?`
 
 Returns phone number type (fixed line, mobile, toll free, etc) or `undefined` (if the number is invalid or if there are no phone number type regular expressions for this country in metadata).
