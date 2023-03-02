@@ -2,6 +2,7 @@ import Metadata from './metadata.js'
 import isPossibleNumber from './isPossibleNumber_.js'
 import isValidNumber from './validate_.js'
 // import isValidNumberForRegion from './isValidNumberForRegion_.js'
+// import checkNumberLength from './helpers/checkNumberLength.js'
 import getNumberType from './helpers/getNumberType.js'
 import getPossibleCountriesForNumber from './helpers/getPossibleCountriesForNumber.js'
 import formatNumber from './format_.js'
@@ -68,6 +69,21 @@ export default class PhoneNumber {
 	// // https://github.com/googlei18n/libphonenumber/blob/master/FAQ.md#when-should-i-use-isvalidnumberforregion
 	// isValidForRegion(country) {
 	// 	return isValidNumberForRegion(this, country, { v2: true }, this.metadata)
+	// }
+
+	// This function was originally meant to be an equivalent for `validatePhoneNumberLength()`,
+	// but later it was found out that it doesn't include the possible `TOO_SHORT` result
+	// returned from `parsePhoneNumberWithError()` in the original `validatePhoneNumberLength()`,
+	// so eventually I simply commented out this method from the `PhoneNumber` class
+	// and just left the `validatePhoneNumberLength()` function, even though that one would require
+	// and additional step to also validate the actual country / calling code of the phone number.
+	// validateLength() {
+	// 	const metadata = new Metadata(this.metadata)
+	// 	metadata.selectNumberingPlan(this.countryCallingCode)
+	// 	const result = checkNumberLength(this.nationalNumber, metadata)
+	// 	if (result !== 'IS_POSSIBLE') {
+	// 		return result
+	// 	}
 	// }
 
 	getType() {
