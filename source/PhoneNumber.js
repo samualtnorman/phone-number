@@ -1,7 +1,7 @@
 import Metadata from './metadata.js'
 import isPossibleNumber from './isPossibleNumber_.js'
 import isValidNumber from './validate_.js'
-import isValidNumberForRegion from './isValidNumberForRegion_.js'
+// import isValidNumberForRegion from './isValidNumberForRegion_.js'
 import getNumberType from './helpers/getNumberType.js'
 import getPossibleCountriesForNumber from './helpers/getPossibleCountriesForNumber.js'
 import formatNumber from './format_.js'
@@ -62,7 +62,9 @@ export default class PhoneNumber {
 		return this.number === phoneNumber.number && this.ext === phoneNumber.ext
 	}
 
-	// // Is just an alias for `this.isValid() && this.country === country`.
+	// A better name would be `isValidForCountry()` / `isValidForCallingCode()`.
+	// Also, see the rationale for not including this method in `isValidNumberForRegion.js`.
+	// // This is just an alias for `this && this.isValid() && this.country === country`.
 	// // https://github.com/googlei18n/libphonenumber/blob/master/FAQ.md#when-should-i-use-isvalidnumberforregion
 	// isValidForRegion(country) {
 	// 	return isValidNumberForRegion(this, country, { v2: true }, this.metadata)
