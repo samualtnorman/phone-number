@@ -342,7 +342,7 @@ Such phone numbering plans are called "non-geographic", and their phone numbers 
 
 ## API
 
-### parsePhoneNumber(string, [options or defaultCountry]): PhoneNumber
+### parsePhoneNumber(string, defaultCountry?: string | options?: object): PhoneNumber
 
 Parses a phone number from `string`.
 
@@ -606,7 +606,7 @@ Returns `true` if the number belongs to a ["non-geographic numbering plan"](#non
 
 Compares two `PhoneNumber`s: returns `true` if they're equal, `false` otherwise.
 
-### `isPossiblePhoneNumber(input: string, defaultCountry?: string): boolean`
+### `isPossiblePhoneNumber(input: string, defaultCountry?: string | options?: object): boolean`
 
 Checks if `input` can be parsed as a "possible" phone number. A phone number is "possible" when it has valid length. The actual phone number digits aren't validated.
 
@@ -615,11 +615,11 @@ isPossiblePhoneNumber('8 (888) 888-88-88', 'RU') === true
 isPossiblePhoneNumber('+12223333333') === true
 ```
 
-The `defaultCountry` argument should be supplied for numbers written in non-international form (without a `+` sign). It will be ignored for numbers written in international form (with a `+` sign).
+For the description of the `defaultCountry?: string | options?: object` argument, see [`parsePhoneNumber()`](#parsephonenumberstring-options-or-defaultcountry-phonenumber) function description.
 
 This function is just a shortcut for a two-step process of ["strictly"](#strictness) parsing a phone number and then calling `.isPossible()`.
 
-### `isValidPhoneNumber(input: string, defaultCountry?: string): boolean`
+### `isValidPhoneNumber(input: string, defaultCountry?: string | options?: object): boolean`
 
 Checks if `input` can be parsed as a "valid" phone number. A phone number is "valid" when it has valid length, and the actual phone number digits match the regular expressions for its country.
 
@@ -630,13 +630,13 @@ isValidPhoneNumber('+12223333333') === false
 isValidPhoneNumber('+12133734253') === true
 ```
 
-The `defaultCountry` argument should be supplied for numbers written in non-international form (without a `+` sign). It will be ignored for numbers written in international form (with a `+` sign).
+For the description of the `defaultCountry?: string | options?: object` argument, see [`parsePhoneNumber()`](#parsephonenumberstring-options-or-defaultcountry-phonenumber) function description.
 
 This function is just a shortcut for a two-step process of ["strictly"](#strictness) parsing a phone number and then calling `.isValid()`.
 
 See ["Using phone number validation feature"](#using-phone-number-validation-feature) for choosing between `isPossible()` and `isValid()`.
 
-### `validatePhoneNumberLength(input: string, defaultCountry?: string): string?`
+### `validatePhoneNumberLength(input: string, defaultCountry?: string | options?: object): string?`
 
 Checks if `input` phone number length is valid. If it is, then nothing is returned. Otherwise, a rejection reason is returned.
 
@@ -671,19 +671,15 @@ validatePhoneNumberLength('444 1 444444', 'TR') === undefined
 validatePhoneNumberLength('444 1 4444444444', 'TR') === 'TOO_LONG'
 ```
 
-The `defaultCountry` argument should be supplied for numbers written in non-international form (without a `+` sign). It will be ignored for numbers written in international form (with a `+` sign).
+For the description of the `defaultCountry?: string | options?: object` argument, see [`parsePhoneNumber()`](#parsephonenumberstring-options-or-defaultcountry-phonenumber) function description.
 
 This function is just a more detailed version of `isPossiblePhoneNumber()` for those who've [asked](https://github.com/catamphetamine/libphonenumber-js/issues/406) for a more specific rejection reason.
 
-### `class` AsYouType([options or defaultCountry])
+### `class` AsYouType(defaultCountry?: string | options?: object)
 
 Creates a formatter for a partially entered phone number.
 
-Available `options`:
-
-* `defaultCountry: string` — Default [country](#country-code) for parsing numbers written in non-international form (without a `+` sign). Will be ignored when parsing numbers written in international form (with a `+` sign). Instead of passing it as `options.defaultCountry`, one could also pass it as a standalone `defaultCountry` argument (for convenience).
-
-* `defaultCallingCode: string` — Default calling code for parsing numbers written in non-international form (without a `+` sign). Will be ignored when parsing numbers written in international form (with a `+` sign). It could be specified when parsing phone numbers belonging to ["non-geographic numbering plans"](#non-geographic) which by nature don't have a country code, making the `defaultCountry` option unusable.
+For the description of the `defaultCountry?: string | options?: object` argument, see [`parsePhoneNumber()`](#parsephonenumberstring-options-or-defaultcountry-phonenumber) function description.
 
 The formatter instance has the following methods:
 
@@ -1307,7 +1303,7 @@ The precise regular expressions aren't included in the default metadata because 
 <details>
 <summary><code>isValidNumberForRegion()</code></summary>
 
-The optional `defaultCountry` argument is the _default_ country, i.e. it does not restrict to just that country, e.g. in those cases where several countries share the same phone numbering rules (NANPA, Britain, etc). For example, even though the number `07624 369230` belongs to the Isle of Man ("IM" country code) calling `isValidNumber('07624369230', 'GB')` still returns `true` because the country is not restricted to `GB`, it's just that `GB` is the default one for the phone numbering rules. For restricting the country see `isValidNumberForRegion()` though restricting a country [might not be a good idea](https://github.com/googlei18n/libphonenumber/blob/master/FAQ.md#when-should-i-use-isvalidnumberforregion).
+The optional `defaultCountry` argument is the _default_ country, i.e. it does not restrict to just that country, e.g. in those cases where several countries share the same phone numbering rules (NANPA, Britain, etc). For example, even though the number `07624 369230` belongs to the Isle of Man ("IM" country code) calling `isValidNumber('07624369230', 'GB')` still returns `true` because the country is not restricted to `GB`, it's just that `GB` is the default one for the phone numbering rules. For restricting the country, see `isValidNumberForRegion()`, though restricting a country [might not be a good idea](https://github.com/googlei18n/libphonenumber/blob/master/FAQ.md#when-should-i-use-isvalidnumberforregion).
 
 ```js
 // Even though '07624 369230' number belongs to the Isle of Man ("IM")
