@@ -1,7 +1,7 @@
 import isValidNumber from '../isValid.js'
 import parseDigits from '../helpers/parseDigits.js'
 import matchPhoneNumberStringAgainstPhoneNumber from './matchPhoneNumberStringAgainstPhoneNumber.js'
-import Metadata from '../Metadata.js'
+import Metadata from '../metadata.js'
 import getCountryByCallingCode from '../helpers/getCountryByCallingCode.js'
 import { chooseFormatForNumber } from '../format.js'
 
