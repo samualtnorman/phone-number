@@ -120,10 +120,10 @@ export function searchNumbers(text: string, metadata: MetadataJson): IterableIte
 export function searchNumbers(text: string, options: CountryCode | { defaultCountry?: CountryCode, v2: true }, metadata: MetadataJson): IterableIterator<NumberFound>;
 
 export function findPhoneNumbersInText(text: string, metadata: MetadataJson): NumberFound[];
-export function findPhoneNumbersInText(text: string, options: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string }, metadata: MetadataJson): NumberFound[];
+export function findPhoneNumbersInText(text: string, options: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string, extended?: boolean }, metadata: MetadataJson): NumberFound[];
 
 export function searchPhoneNumbersInText(text: string, metadata: MetadataJson): IterableIterator<NumberFound>;
-export function searchPhoneNumbersInText(text: string, options: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string }, metadata: MetadataJson): IterableIterator<NumberFound>;
+export function searchPhoneNumbersInText(text: string, options: CountryCode | { defaultCountry?: CountryCode, defaultCallingCode?: string, extended?: boolean }, metadata: MetadataJson): IterableIterator<NumberFound>;
 
 export class PhoneNumberMatcher {
   constructor(text: string, metadata: MetadataJson);
