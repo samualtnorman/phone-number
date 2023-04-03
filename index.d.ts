@@ -15,7 +15,7 @@ import {
   NumberFormat,
   NumberingPlan,
   ValidatePhoneNumberLengthResult
-} from './types';
+} from './types.d.js';
 
 export {
   MetadataJson,

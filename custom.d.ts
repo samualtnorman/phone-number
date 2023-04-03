@@ -17,13 +17,13 @@ import {
   NumberType,
   NumberFormat,
   NumberingPlan
-} from './types';
+} from './types.d.js';
 
 import {
   ParsedNumber,
   FormatNumberOptions,
   ParseNumberOptions
-} from './index';
+} from './index.d.js';
 
 export {
   MetadataJson,
