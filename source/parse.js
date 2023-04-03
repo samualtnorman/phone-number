@@ -96,6 +96,7 @@ export default function parse(text, options, metadata) {
 		country,
 		nationalNumber,
 		countryCallingCode,
+		countryCallingCodeSource,
 		carrierCode
 	} = parsePhoneNumber(
 		formattedPhoneNumber,
@@ -154,6 +155,7 @@ export default function parse(text, options, metadata) {
 		if (ext) {
 			phoneNumber.ext = ext
 		}
+		phoneNumber.__countryCallingCodeSource = countryCallingCodeSource
 		return phoneNumber
 	}
 
@@ -282,7 +284,7 @@ function parsePhoneNumber(
 	metadata
 ) {
 	// Extract calling code from phone number.
-	let { countryCallingCode, number } = extractCountryCallingCode(
+	let { countryCallingCodeSource, countryCallingCode, number } = extractCountryCallingCode(
 		parseIncompletePhoneNumber(formattedPhoneNumber),
 		defaultCountry,
 		defaultCallingCode,
@@ -313,7 +315,10 @@ function parsePhoneNumber(
 	else return {}
 
 	if (!number) {
-		return { countryCallingCode }
+		return {
+			countryCallingCodeSource,
+			countryCallingCode
+		}
 	}
 
 	const {
@@ -350,6 +355,7 @@ function parsePhoneNumber(
 	return {
 		country,
 		countryCallingCode,
+		countryCallingCodeSource,
 		nationalNumber,
 		carrierCode
 	}

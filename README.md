@@ -444,6 +444,11 @@ const phoneNumber = new PhoneNumber('RU', '8005553535', metadata)
 * `ext: string?` — The [phone number extension](https://en.wikipedia.org/wiki/Extension_(telephone)), if any. Example: `"1234"`.
 * `carrierCode: string?` — The ["carrier code"](https://www.voip-info.org/carrier-identification-codes/), if any. Example: `"15"`. "Carrier codes" are only used in Colombia and Brazil and only when dialing within those countries from a mobile phone to a fixed line number.
 
+<!-- * `countryCallingCodeSource: string` — How the [country calling code](#country-calling-code) was obtained for this phone number. -->
+  <!-- * `FROM_NUMBER_WITH_PLUS_SIGN` — The country_code is derived based on a phone number with a leading "+", e.g. the French number "+33 1 42 68 53 00". -->
+  <!-- * `FROM_NUMBER_WITHOUT_PLUS_SIGN` — The country_code is derived based on a phone number without a leading "+", e.g. the French number "33 1 42 68 53 00" when defaultCountry is supplied as France. -->
+  <!-- * `FROM_DEFAULT_COUNTRY` — The country_code is derived NOT based on the phone number itself, but from the defaultCountry parameter provided in the parsing function by the clients. This happens mostly for numbers written in the national format (without country code). For example, this would be set when parsing the French number "01 42 68 53 00", when defaultCountry is supplied as France. -->
+
 `PhoneNumber` class instance provides the following methods:
 
 #### `setExt(ext: string)`
