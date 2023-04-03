@@ -161,8 +161,11 @@ export default class PhoneNumberMatcher
 
     // Validate `leniency`.
 		if (!options.leniency) {
-			throw new TypeError('`Leniency` not supplied')
+			throw new TypeError('`leniency` is required')
 		}
+    if (options.leniency !== 'POSSIBLE' && options.leniency !== 'VALID') {
+      throw new TypeError(`Invalid \`leniency\`: "${options.leniency}". Supported values: "POSSIBLE", "VALID".`)
+    }
 
     // Validate `maxTries`.
 		if (options.maxTries < 0) {
