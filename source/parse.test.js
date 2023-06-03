@@ -541,5 +541,8 @@ describe('parse', () => {
 		// https://gitlab.com/catamphetamine/libphonenumber-js/-/issues/103
 		const phoneNumber = parseNumber('8004001000', { defaultCountry: 'CA', v2: true })
 		phoneNumber.country.should.equal('CA')
+
+		const phoneNumber2 = parseNumber('4389999999', { defaultCountry: 'US', v2: true })
+		phoneNumber.country.should.equal('CA')
 	})
 })

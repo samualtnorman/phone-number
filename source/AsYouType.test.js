@@ -1369,6 +1369,10 @@ describe('AsYouType.getNumberValue()', () => {
 		const formatter = new AsYouType('CA')
 		formatter.input('8004001000')
 		formatter.getNumber().country.should.equal('CA')
+
+		const formatter2 = new AsYouType('US')
+		formatter2.input('4389999999')
+		formatter2.getNumber().country.should.equal('CA')
 	})
 })
 

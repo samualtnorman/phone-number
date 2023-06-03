@@ -1,7 +1,11 @@
 import Metadata from '../metadata.js'
 import getNumberType from './getNumberType.js'
 
-export default function getCountryByNationalNumber(nationalPhoneNumber, { countries, defaultCountry, metadata }) {
+export default function getCountryByNationalNumber(nationalPhoneNumber, {
+	countries,
+	defaultCountry,
+	metadata
+}) {
 	// Re-create `metadata` because it will be selecting a `country`.
 	metadata = new Metadata(metadata)
 
