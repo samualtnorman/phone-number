@@ -273,8 +273,11 @@ export default class AsYouType {
 	determineTheCountry() {
 		this.state.setCountry(getCountryByCallingCode(
 			this.isInternational() ? this.state.callingCode : this.defaultCallingCode,
-			this.state.nationalSignificantNumber,
-			this.metadata
+			{
+				nationalNumber: this.state.nationalSignificantNumber,
+				defaultCountry: this.defaultCountry,
+				metadata: this.metadata
+			}
 		))
 	}
 
