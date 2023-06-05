@@ -1373,6 +1373,11 @@ describe('AsYouType.getNumberValue()', () => {
 		const formatter2 = new AsYouType('US')
 		formatter2.input('4389999999')
 		formatter2.getNumber().country.should.equal('CA')
+
+		// No country matches the national number digits.
+		const formatter3 = new AsYouType('US')
+		formatter3.input('1111111111')
+		formatter3.getNumber().country.should.equal('US')
 	})
 })
 

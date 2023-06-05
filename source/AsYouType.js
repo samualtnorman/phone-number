@@ -383,11 +383,14 @@ export default class AsYouType {
 				const callingCode = metadata.numberingPlan.callingCode()
 				const ambiguousCountries = this.metadata.getCountryCodesForCallingCode(callingCode)
 				if (ambiguousCountries.length > 1) {
-					country = getCountryByNationalNumber(nationalSignificantNumber, {
+					const exactCountry = getCountryByNationalNumber(nationalSignificantNumber, {
 						countries: ambiguousCountries,
 						defaultCountry: this.defaultCountry,
 						metadata: this.metadata.metadata
 					})
+					if (exactCountry) {
+						country = exactCountry
+					}
 				}
 			}
 		}
