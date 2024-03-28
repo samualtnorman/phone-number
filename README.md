@@ -1,4 +1,10 @@
-# libphonenumber-js
+# `@samual/phone-number`
+
+This is a rewrite of [`libphonenumber-js`](https://www.npmjs.com/package/libphonenumber-js) with the goal of maximising
+tree shakability.
+
+## Todo
+- [ ] [`source/tools/semver-compare.js`](source/tools/semver-compare.js) has spaces for indentation
 
 [![npm version](https://img.shields.io/npm/v/libphonenumber-js.svg?style=flat-square)](https://www.npmjs.com/package/libphonenumber-js)
 [![npm downloads](https://img.shields.io/npm/dm/libphonenumber-js.svg?style=flat-square)](https://www.npmjs.com/package/libphonenumber-js)
