@@ -1,3 +1,5 @@
+import { ensure } from "@samual/lib/assert"
+
 // Copy-pasted from:
 // https://github.com/substack/semver-compare/blob/master/index.js
 //
@@ -6,11 +8,13 @@
 //
 // Fixes `semver-compare` not being able to compare versions with alpha/beta/etc "tags".
 // https://github.com/catamphetamine/libphonenumber-js/issues/381
-export default function(a, b) {
-    a = a.split('-')
-    b = b.split('-')
-    var pa = a[0].split('.')
-    var pb = b[0].split('.')
+/** @param {string} a_
+  * @param {string} b_ */
+export default function(a_, b_) {
+    const a = a_.split('-')
+    const b = b_.split('-')
+    var pa = ensure(a[0], HERE).split('.')
+    var pb = ensure(b[0], HERE).split('.')
     for (var i = 0; i < 3; i++) {
         var na = Number(pa[i])
         var nb = Number(pb[i])
