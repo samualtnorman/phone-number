@@ -97,6 +97,9 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@samual/lib": "^0.9.1",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@types/babel__preset-env": "^7.9.6",
+    "@types/node": "^20.11.30",
     "babel-plugin-here": "^1.0.0",
     "babel-plugin-istanbul": "^6.1.1",
     "chai": "^4.3.6",
@@ -115,7 +118,8 @@
     "rollup": "^4.13.2",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-prettier": "^4.1.1",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^5.4.3"
   },
   "scripts": {
     "metadata:update:job": "git reset --hard && git pull && npm install && npm run metadata:update:release",

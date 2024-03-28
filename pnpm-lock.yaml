@@ -38,6 +38,15 @@ devDependencies:
   '@samual/lib':
     specifier: ^0.9.1
     version: 0.9.1
+  '@total-typescript/ts-reset':
+    specifier: ^0.5.1
+    version: 0.5.1
+  '@types/babel__preset-env':
+    specifier: ^7.9.6
+    version: 7.9.6
+  '@types/node':
+    specifier: ^20.11.30
+    version: 20.11.30
   babel-plugin-here:
     specifier: ^1.0.0
     version: 1.0.0
@@ -95,6 +104,9 @@ devDependencies:
   rollup-plugin-terser:
     specifier: ^7.0.2
     version: 7.0.2(rollup@4.13.2)
+  typescript:
+    specifier: ^5.4.3
+    version: 5.4.3
 
 packages:
 
@@ -1624,6 +1636,14 @@ packages:
     engines: {node: '>=20'}
     optionalDependencies:
       valibot: 0.25.0
+    dev: true
+
+  /@total-typescript/ts-reset@0.5.1:
+    resolution: {integrity: sha512-AqlrT8YA1o7Ff5wPfMOL0pvL+1X+sw60NN6CcOCqs658emD6RfiXhF7Gu9QcfKBH7ELY2nInLhKSCWVoNL70MQ==}
+    dev: true
+
+  /@types/babel__preset-env@7.9.6:
+    resolution: {integrity: sha512-PaOA2V4J3CZZopQaTGT1e8WEWCqHWc1k12zLlci4T9eR2lQIlA/GbnVbloFDqYVFr1BNiCXnotH32Up8WdgTxQ==}
     dev: true
 
   /@types/estree@1.0.5:
@@ -4706,6 +4726,12 @@ packages:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
     dependencies:
       is-typedarray: 1.0.0
+    dev: true
+
+  /typescript@5.4.3:
+    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
     dev: true
 
   /typical@4.0.0:
